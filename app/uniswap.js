@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ChainId, Fetcher, WETH, Route, Trade, TokenAmount, TradeType, Percent, Token, Price } = require('@uniswap/sdk');
+const { ChainId, WETH, Percent } = require('@uniswap/sdk');
 const chainID = ChainId.MAINNET;
 const ethers = require('ethers');
 
@@ -11,26 +11,52 @@ const slippageTolerance = new Percent('100', '100000');
 const weth = WETH[chainID];
 const to = process.env.TO;
 
-console.log(process.env.SWAPEXACTETHFORTOKENS)
-
 
 const signer = new ethers.Wallet(process.env.WALLET);
 
 const account = signer.connect(provider);
 
-const buyTokens = new ethers.Contract(
+const buy = new ethers.Contract(
     process.env.UNISWAP,
     [process.env.SWAPEXACTETHFORTOKENS]
     , account
 );
 
-const sellTokens = new ethers.Contract(
+const sell = new ethers.Contract(
     process.env.UNISWAP,
     [process.env.SWAPEXACTTOKENSFORETH]
     , account
 );
 
+const buyTokens = async (buyObj) => {
+    await buy.swapExactETHForTokens(
+        buyObj.amountOutMinHex,
+        buyObj.path,
+        to,
+        buyObj.deadline,
+        {
+            value: buyObj.inputAmountHex,
+            gasPrice: buyObj.gasPrice,
+            gasLimit: ethers.BigNumber.from(500000).toHexString()
+        });
+}
+
+const sellTokens = async (sellObj) => {
+    await sell.swapExactTokensForETH(
+        sellObj.amountOutMin,
+        sellObj.path,
+        to,
+        sellObj.deadline,
+        {
+            value: sellObj.inputAmountHex,
+            gasPrice: sellObj.gasPrice,
+            gasLimit: ethers.BigNumber.from(500000).toHexString()
+        });
+}
+
 module.exports = {
     sellTokens,
     buyTokens,
+    weth,
+    chainID,
 }

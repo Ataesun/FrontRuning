@@ -5,7 +5,9 @@ const frontRun = require('./frontRun')
 console.log("Starting Emitter")
 
 emitter.on("txPool", async (event) => {
-    let filteredTransaction = await watcher(event)
-    console.log(filteredTransaction)
-    frontRun(filteredTransaction);
+    let filteredTransaction = {}
+    filteredTransaction = await watcher(event)
+    if (filteredTransaction !== undefined) {
+        frontRun(filteredTransaction);
+    }
 })

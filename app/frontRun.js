@@ -1,13 +1,11 @@
 const isProfitable = require('./isProfitable')
-const uniswap = require('./uniswap')
 
 
 const frontRun = async (filteredTransaction) => {
-
-    console.log('In frontRun.js')
-    let frontRunable = isProfitable(filteredTransaction);
+    let frontRunable = await isProfitable(filteredTransaction);
     if(frontRunable !== false){
-        console.log(uniswap)
+        // await uniswap.buyTokens;
+        // await uniswap.sellTokens
     }
 }
 
