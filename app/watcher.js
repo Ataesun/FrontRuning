@@ -7,8 +7,6 @@ const watcher = async (event) => {
   compareGas = compareGas.data
 
   if (
-    //   event.status === 'pending' && event.contractCall.methodName === 'swapExactTokensForTokens' ||
-    //   event.status === 'pending' && event.contractCall.methodName === 'swapTokensForExactTokens' ||
     event.status === 'pending' && event.contractCall.methodName === 'swapExactETHForTokens' ||
     event.status === 'pending' && event.contractCall.methodName === 'swapETHForExactTokens') {
 

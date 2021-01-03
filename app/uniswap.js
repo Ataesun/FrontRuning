@@ -32,7 +32,7 @@ const buyTokens = async (buyObj) => {
     await buy.swapExactETHForTokens(
         buyObj.amountOutMinHex,
         buyObj.path,
-        to,
+        process.env.TO,
         buyObj.deadline,
         {
             value: buyObj.inputAmountHex,
@@ -43,7 +43,7 @@ const buyTokens = async (buyObj) => {
 
 const sellTokens = async (sellObj) => {
     await sell.swapExactTokensForETH(
-        sellObj.amountOutMin,
+        sellObj.amountOutMinHex,
         sellObj.path,
         to,
         sellObj.deadline,
