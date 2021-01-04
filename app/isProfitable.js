@@ -13,7 +13,7 @@ const isProfitable = async (filteredTransaction) => {
     let MaximumEtherLoss = etherValue - (eth.price * amount)
 
     // 70% of maximum slippage
-    let threshHold = (1-(MaximumEtherLoss / etherValue)+1)*0.7;
+    let threshHold = 1+(MaximumEtherLoss/etherValue*0.7);
     // let input = (slippagePercent/2)
 
     console.log(filteredTransaction)

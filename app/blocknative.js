@@ -4,7 +4,7 @@ const WebSocket = require('ws');
 require('dotenv').config()
 
 const options = {
-    dappId: process.env.DAPPID,
+    dappId: process.env.DAPPID1,
     networkId: 1,
     transactionHandlers: [],
     ws: WebSocket
