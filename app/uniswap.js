@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ChainId, WETH, Percent } = require('@uniswap/sdk');
+const { ChainId, Fetcher, Token, WETH, Percent } = require('@uniswap/sdk');
 const chainID = ChainId.MAINNET;
 const ethers = require('ethers');
 
@@ -27,6 +27,21 @@ const sell = new ethers.Contract(
     [process.env.SWAPEXACTTOKENSFORETH]
     , account
 );
+
+const fetchData = async (filteredTransaction) => {
+    let token = new Token(ChainId.MAINNET, filteredTransaction.tokenOut, filteredTransaction.decimals)
+    pair = await Fetcher.fetchPairData(token, (weth));
+
+    return {
+        token,
+        pair,
+    }
+}
+
+const createPath = (tokenFrom, tokenTo) => {
+    return [tokenFrom.address, tokenTo.address]
+}
+
 
 const buyTokens = async (buyObj) => {
     await buy.swapExactETHForTokens(
@@ -57,6 +72,8 @@ const sellTokens = async (sellObj) => {
 module.exports = {
     sellTokens,
     buyTokens,
+    fetchData,
+    createPath,
     weth,
     chainID,
 }

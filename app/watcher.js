@@ -4,8 +4,9 @@ const gasURL = process.env.GASAPI
 
 
 const precise = async (token,x) => {
-  let sig = await axios.get(`https://api.ethplorer.io/getTokenInfo/${token}?apiKey=EK-6eBWz-h6R1CLG-3wAq1`);
-  return Number.parseFloat(x).toPrecision(sig);
+  let sig = await axios.get(`https://api.ethplorer.io/getTokenInfo/${token}?apiKey=${process.env.TOKENKEY}`);
+  sig = sig.data.decimals
+  return sig;
 }
 
 const watcher = async (event) => {
@@ -41,12 +42,8 @@ const watcher = async (event) => {
             tokenOut: event.contractCall.params.path[1],
             deadline: parseInt(event.contractCall.params.deadline)
           }
-
-          console.log(obj.amountOutMin)
-          obj.amountOutMin = await precise(obj.token,obj.amountOutMin)
-          console.log(obj.amountOutMin)
-
-          process.exit()
+          obj.decimals = await precise(obj.tokenOut,obj.amountOutMin)
+          obj.amountOutMin = Number.parseFloat(obj.amountOutMin)/Math.pow(10, obj.decimals)
           return obj;
         }
       }
