@@ -1,11 +1,9 @@
 const { ChainId, Fetcher, Route, Trade, TokenAmount, TradeType, Token } = require('@uniswap/sdk');
 const axios = require('axios').default
 const uniswap = require('./uniswap')
+const percentageChange = require('./percentageChange')
 
-const getDecimal = async (token) => {
-    let sig = await axios.get(`https://api.ethplorer.io/getTokenInfo/${token}?apiKey=freekey`);
-    return sig.data.decimals
-}
+
 
 const fetchData = async (filteredTransaction) => {
     let token = new Token(ChainId.MAINNET, filteredTransaction.tokenOut, filteredTransaction.decimals)
@@ -53,26 +51,25 @@ const createPath = (tokenFrom, tokenTo) => {
     return [tokenFrom.address, tokenTo.address]
 }
 
-const calculateValue = async (pair)=>{
-
-    let data = await axios.get(`https://info.uniswap.org/pair/${pair.liquidityToken.address}`)
-    console.log(data)
-}
 
 const isProfitable = async (filteredTransaction) => {
 
     filteredTransaction.decimals = await getDecimal(filteredTransaction.tokenOut);
     let { token, pair, trade } = await fetchData(filteredTransaction)
 
-    let etherValue = parseInt(filteredTransaction.etherValue);
-    let executionPrice = parseFloat(trade.executionPrice.invert().toSignificant(18))
-    let Amount = parseInt(filteredTransaction.amountOutMin)
+    let etherValue = filteredTransaction.etherValue;
+    let executionPrice = trade.executionPrice.invert().toSignificant(18)
+    let Amount = filteredTransaction.amountOutMin
     let MaximumEtherLoss = etherValue - executionPrice * Amount.toPrecision(filteredTransaction.decimals)
-    let slippagePercent = 1 - (MaximumEtherLoss / filteredTransaction.etherValue);
+
+    let revenue = await percentageChange(filteredTransaction.etherValue/1e18, 
+        filteredTransaction.amountOutMin.toPrecision(filteredTransaction.decimals), pair.liquidityToken.address)
+
+    let slippagePercent = 1 - (MaximumEtherLoss / filteredTransaction.etherValue)+1;
     // let input = (slippagePercent/2)
     console.log(`maximum Ether Loss ${MaximumEtherLoss / 1e18}`)
     console.log(`slippage percent is : ${slippagePercent}`);
-
+    console.log(`revenue percent is : ${revenue}`)
     let profitable = true;
 
 
