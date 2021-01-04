@@ -2,6 +2,7 @@ const { ChainId, Fetcher, Route, Trade, TokenAmount, TradeType, Token } = requir
 const axios = require('axios').default
 const uniswap = require('./uniswap')
 const percentageChange = require('./percentageChange')
+const maximise = require('./maximise')
 
 const isProfitable = async (filteredTransaction) => {
 
@@ -19,6 +20,8 @@ const isProfitable = async (filteredTransaction) => {
     console.log(filteredTransaction)
     console.log(`maximum Ether Loss ${MaximumEtherLoss}`)
     console.log(`increase threshold is : ${threshHold}`);
+    let tokenToBuy = await maximise(eth, pairToken ,threshHold)
+    console.log(`The amount of tokens to buy is  ${tokenToBuy}`)
 
     let profitable = true;
 
