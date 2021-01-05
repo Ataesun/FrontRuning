@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ChainId, Fetcher, Trade, TokenAmount, Route, Token, WETH, Percent } = require('@uniswap/sdk');
+const { ChainId, Fetcher, Trade, TokenAmount, Route, Token, TradeType, WETH, Percent } = require('@uniswap/sdk');
 const chainID = ChainId.MAINNET;
 const ethers = require('ethers');
 
@@ -24,7 +24,7 @@ const buy = new ethers.Contract(
 );
 
 
-const wrapObj = (filteredTransaction, trade) => {
+const createBuyObj = (filteredTransaction, trade) => {
     let amountOutMin = trade.minimumAmountOut(buyTolerance).raw;
     let amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
 
@@ -57,7 +57,7 @@ const createSellObj = (obj, amount) => {
         amountOutMinHex: amountOutMinHex,
         path: path,
         deadline: Math.floor(Date.now() / 1000) + 60 * 10,
-        gasPrice: obj.buyObj.gasPrice
+        gasPrice: obj.gasPrice
     }
 
     return txObj;
@@ -109,23 +109,27 @@ const buyTokens = async (buyObj) => {
 }
 
 const sellTokens = async (sellObj) => {
-    await sell.swapExactTokensForETH(
+    let tx = await sell.swapExactTokensForETH(
         sellObj.amountIn,
         sellObj.amountOutMinHex,
         sellObj.path,
         process.env.TO,
         sellObj.deadline,
         {
-            value: sellObj.inputAmountHex,
             gasPrice: sellObj.gasPrice,
             gasLimit: ethers.BigNumber.from(500000).toHexString()
         });
+
+        console.log(tx)
+
+        let reciept =  await tx.wait();
+        console.log(reciept)
 }
 
 const createTrade = (pair, token, amount) => {
 
     let route = new Route([pair], token);
-    let trade = new Trade(route, new TokenAmount(weth, BigInt(amount), TradeType.EXACT_INPUT));
+    let trade = new Trade(route, new TokenAmount(token, BigInt(amount)), TradeType.EXACT_INPUT);
     return trade
 }
 
@@ -137,8 +141,30 @@ module.exports = {
     createPath,
     createApprove,
     createTrade,
+    createBuyObj,
     createSellObj,
-    sellWrapper,
     weth,
     chainID,
 }
+
+const test = async () => {
+
+    let dai = await Fetcher.fetchTokenData(chainID, '0x6b175474e89094c44da98b954eedeac495271d0f');
+    let pair = await Fetcher.fetchPairData(dai, weth);
+
+    let obj = {
+        token: dai,
+        pair: pair,
+        gasPrice : 1
+    }
+
+    let amount = BigInt(1e18);
+
+    let sellThing = createSellObj(obj, amount)
+    let tx = await sellTokens(sellThing)
+
+
+}
+
+
+test()

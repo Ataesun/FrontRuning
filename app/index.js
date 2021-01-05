@@ -1,9 +1,7 @@
 const emitter = require('./blocknative')
 const watcher = require('./watcher')
-const frontRun = require('./frontRun')
 const isProfitable = require('./isProfitable')
 const uniswap = require('./uniswap')
-const { TokenAmount } = require('@uniswap/sdk')
 
 
 console.log("Starting Emitter")
