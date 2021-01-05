@@ -1,14 +1,14 @@
 const axios = require("axios")
 
 const fetchData = async (pairID)=> {
-
+  console.log(pairID)
   let response = await axios({
     url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
     method: 'post',
     data: {
       query: `
   query test{
-    pair(id: "${pairID.toLowerCase()}"){
+    pair(id: "${pairID}"){
     reserve0
     reserve1
     token0{
@@ -26,11 +26,8 @@ const fetchData = async (pairID)=> {
     }
   })
 
+
   response = response.data.data.pair;
-
-  // sorting the data so token0 is always etherum
-
-console.log(response)
 
   if(response.token0.name !== 'Wrapped Ether'){
     return {
@@ -65,17 +62,17 @@ const percentageChange = async (pair) => {
 
 
 let { eth, pairToken} = await fetchData(pair);
-  // console.log(eth)
-  // console.log(token)
+  console.log(eth)
+  console.log(pairToken)
   return {
     eth,
     pairToken
   }
 
 }
+
 // const test = async () => {
-//   let data = await percentageChange(5.214, 150000, '0x81fbef4704776cc5bba0a5df3a90056d2c6900b3')
-//   console.log(data)
+//   let data = await percentageChange("0x81fbef4704776cc5bba0a5df3a90056d2c6900b3")
 // }
 // test()
 
