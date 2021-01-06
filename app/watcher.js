@@ -10,6 +10,12 @@ const precise = async (token,x) => {
 
 
 const watchStatus = async (event, txHash) =>{
+
+  console.log(`In watch status`)
+  
+  console.log(event.hash)
+  console.log(tx.hash)
+
   if(event.status === 'confirmed' && event.hash == txHash){
     write()
     console.log('wrote')
@@ -57,6 +63,9 @@ const watcher = async (event) => {
     // }
   }
 }
+
+
+
 
 module.exports = {
   watcher,

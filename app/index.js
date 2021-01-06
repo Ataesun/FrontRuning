@@ -13,15 +13,16 @@ console.log("Starting Emitter")
 
 
 
+
 emitter.on("txPool", async (event) => {
 
     let filteredTransaction = await watcher(event)
     if (filteredTransaction !== undefined) {
         let buyObj = await isProfitable(filteredTransaction);
+
         if (buyObj !== undefined) {
-            console.log(buyObj)
-            console.log('Woah where is the buyObj')
-            emitter.on("txPool", event => watchStatus(event, filteredTransaction))
+            console.log(buyObj.buyObj)
+            blocknative.createTransactionWatcher(filteredTransaction.txHash);
             while (process.env.ISFINISHED === 'false') {
             }
             console.log(process.env.ISFINISHED)
@@ -29,12 +30,13 @@ emitter.on("txPool", async (event) => {
     }
 
 
+
     // await uniswap.createApprove(filteredTransaction.tokenOut);
 
     // let buyTransaction = await uniswap.buyTokens(buyObj.buyObj);
 
     // if(isFinished === true){
-    //     let sellObj = createSellObj(buyObj, transaction.amount);
+    //     let sellObj = createSellObj(buyObj.token, buyObj.pair, filteredTransaction.gasPrice,transaction.amount);
     //     let sellTransaction = await uniswap.sellTokens(sellObj)
     // }
 })
