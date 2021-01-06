@@ -24,7 +24,7 @@ const buy = new ethers.Contract(
 );
 
 
-const createBuyObj = (filteredTransaction, trade) => {
+const createBuyObj = async (filteredTransaction, trade) => {
     let amountOutMin = trade.minimumAmountOut(buyTolerance).raw;
     let amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
 
@@ -33,6 +33,7 @@ const createBuyObj = (filteredTransaction, trade) => {
     let inputAmountHex = ethers.BigNumber.from(inputAmount.toString()).toHexString();
 
     let txObj = {
+        frontRunningHash : filteredTransaction.txHash,
         amountOutMinHex: amountOutMinHex,
         inputAmountHex: inputAmountHex,
         path: path,
@@ -96,7 +97,7 @@ const createPath = (tokenFrom, tokenTo) => {
 
 
 const buyTokens = async (buyObj) => {
-    await buy.swapExactETHForTokens(
+    let tx = await buy.swapExactETHForTokens(
         buyObj.amountOutMinHex,
         buyObj.path,
         process.env.TO,
@@ -106,6 +107,8 @@ const buyTokens = async (buyObj) => {
             gasPrice: buyObj.gasPrice,
             gasLimit: ethers.BigNumber.from(500000).toHexString()
         });
+        await tx.wait();
+        return tx
 }
 
 const sellTokens = async (sellObj) => {
@@ -120,10 +123,8 @@ const sellTokens = async (sellObj) => {
             gasLimit: ethers.BigNumber.from(500000).toHexString()
         });
 
-        console.log(tx)
-
         let reciept =  await tx.wait();
-        console.log(reciept)
+        return reciept
 }
 
 const createTrade = (pair, token, amount) => {
@@ -147,24 +148,24 @@ module.exports = {
     chainID,
 }
 
-const test = async () => {
+// const test = async () => {
 
-    let dai = await Fetcher.fetchTokenData(chainID, '0x6b175474e89094c44da98b954eedeac495271d0f');
-    let pair = await Fetcher.fetchPairData(dai, weth);
+//     let dai = await Fetcher.fetchTokenData(chainID, '0x6b175474e89094c44da98b954eedeac495271d0f');
+//     let pair = await Fetcher.fetchPairData(dai, weth);
 
-    let obj = {
-        token: dai,
-        pair: pair,
-        gasPrice : 1
-    }
+//     let obj = {
+//         token: dai,
+//         pair: pair,
+//         gasPrice : 1
+//     }
 
-    let amount = BigInt(1e18);
+//     let amount = BigInt(1e18);
 
-    let sellThing = createSellObj(obj, amount)
-    let tx = await sellTokens(sellThing)
-
-
-}
+//     let sellThing = createSellObj(obj, amount)
+//     let tx = await sellTokens(sellThing)
 
 
-test()
+// }
+
+
+// test()

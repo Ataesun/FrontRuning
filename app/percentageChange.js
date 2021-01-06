@@ -1,7 +1,6 @@
 const axios = require("axios")
 
 const fetchData = async (pairID)=> {
-  console.log(pairID)
   let response = await axios({
     url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
     method: 'post',
@@ -59,16 +58,11 @@ const fetchData = async (pairID)=> {
 }
 
 const percentageChange = async (pair) => {
-
-
 let { eth, pairToken} = await fetchData(pair);
-  console.log(eth)
-  console.log(pairToken)
   return {
     eth,
     pairToken
   }
-
 }
 
 // const test = async () => {

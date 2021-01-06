@@ -11,9 +11,20 @@ const options = {
 }
 
 const blocknative = new BlocknativeSdk(options)
-const {
-    emitter,
-    details
-} = blocknative.account(process.env.UNISWAP)
 
-module.exports = emitter;
+const createEmitter = () => {
+    const {
+        emitter,
+        details
+    } = blocknative.account(process.env.UNISWAP)
+    return emitter
+}
+
+const unsubscribe = () => {
+    blocknative.unsubscribe(process.env.UNISWAP)
+}
+
+module.exports = {
+    createEmitter,
+    unsubscribe
+}

@@ -1,32 +1,37 @@
+require('dotenv').config()
 const { ChainId, Fetcher, Route, Trade, TokenAmount, TradeType, Token } = require('@uniswap/sdk');
 const axios = require('axios').default
 const uniswap = require('./uniswap')
 const percentageChange = require('./percentageChange')
 const maximise = require('./maximise')
+const blocknative = require('./blocknative')
 
 const isProfitable = async (filteredTransaction) => {
 
     let { token ,pair} = await uniswap.fetchData(filteredTransaction)
     let etherValue = filteredTransaction.etherValue;
-    let amount = filteredTransaction.amountOutMin
+    let tokenOutAmount = filteredTransaction.amountOutMin
 
-    let {eth, pairToken} = await percentageChange(pair.liquidityToken.address)
-    let MaximumEtherLoss = etherValue - (eth.price * amount)
+    let {eth, pairToken} = await percentageChange(pair.liquidityToken.address.toLowerCase())
+    let MaximumEtherLoss = etherValue - (eth.price * tokenOutAmount)
 
-    // 70% of maximum slippage
     let threshHold = 1+(MaximumEtherLoss/etherValue*0.7);
-    // let input = (slippagePercent/2)
+    let frontRunAmount = MaximumEtherLoss*process.env.ETHPRICE*0.5
 
-    if(MaximumEtherLoss*500 - filteredTransaction.gas/2.5 > 50){
+    console.log(frontRunAmount - filteredTransaction.gas/25e8 )
+
+    if((frontRunAmount- filteredTransaction.gas/2.5) > 50){
+        console.log('This is profitable calculateing x')
         let tokenToBuy = await maximise(eth, pairToken ,threshHold)
+        console.log(tokenToBuy)
         let trade = uniswap.createTrade(pair, uniswap.weth ,tokenToBuy*1e18)
         return {
             token,
             pair,
-            buyObj :  uniswap.wrapObj(filteredTransaction,trade)
+            buyObj :  await uniswap.createBuyObj(filteredTransaction,trade)
         }
     }
-    return false;
+    return undefined
 }
 
 module.exports = isProfitable
