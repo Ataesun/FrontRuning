@@ -6,7 +6,7 @@ const writeToEnv = require('./writeToEnv')
 
 
 const options = {
-    dappId: process.env.DAPPID2,
+    dappId: process.env.DAPPID,
     networkId: 1,
     transactionHandlers: [],
     ws: WebSocket
@@ -37,11 +37,13 @@ const createTransactionWatcher = async(hash) =>{
     
 
     emitter.on("txConfirmed", (obj) => {
-        
+        console.log(obj)
+        writeToEnv.write()
+        console.log('written')
     })
 }
 
-createTransactionWatcher('0x68a4929d72d0d0367b70be773d99cb92144fde467205b43741d8c7fcfd802009');
+// createTransactionWatcher('0xd5857df5b5f46f0cf5f1435112834a3a63d74f820c842ef461b77a2a42aff0b9');
 
 
 module.exports = {

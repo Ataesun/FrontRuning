@@ -9,18 +9,6 @@ const precise = async (token,x) => {
 }
 
 
-const watchStatus = async (event, txHash) =>{
-
-  console.log(`In watch status`)
-  
-  console.log(event.hash)
-  console.log(tx.hash)
-
-  if(event.status === 'confirmed' && event.hash == txHash){
-    write()
-    console.log('wrote')
-  }
-}
 
 const watcher = async (event) => {
   let compareGas = await axios.get(process.env.GASAPI)
@@ -29,7 +17,7 @@ const watcher = async (event) => {
     event.status === 'pending' && event.contractCall.methodName === 'swapExactETHForTokens' ||
     event.status === 'pending' && event.contractCall.methodName === 'swapETHForExactTokens') {
 
-    // if (parseInt(event.gasPrice) > (compareGas.average - 20) * 100000000 && parseInt(event.gasPrice) < (compareGas.fast) * 100000000) {
+    // if (parseInt(event.gasPrice) > (compareGas.average - 10) * 100000000 && parseInt(event.gasPrice) < (compareGas.fast +10) * 100000000) {
     //   if (event.contractCall.params.path[1].toLowerCase() !== '0x6b175474e89094c44da98b954eedeac495271d0f'.toLocaleLowerCase() &&
     //     event.contractCall.params.path[1].toLowerCase() !== '0xdac17f958d2ee523a2206206994597c13d831ec7'.toLocaleLowerCase() &&
     //     event.contractCall.params.path[1].toLowerCase() !== '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'.toLocaleLowerCase() &&
@@ -54,6 +42,7 @@ const watcher = async (event) => {
             tokenOut: event.contractCall.params.path[1],
             deadline: parseInt(event.contractCall.params.deadline)
           }
+
           obj.decimals = await precise(obj.tokenOut,obj.amountOutMin)
           obj.amountOutMin = Number.parseFloat(obj.amountOutMin)/Math.pow(10, obj.decimals)
           
@@ -67,5 +56,4 @@ const watcher = async (event) => {
 
 module.exports = {
   watcher,
-  watchStatus
 }

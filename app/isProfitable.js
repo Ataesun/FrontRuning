@@ -2,6 +2,7 @@ require('dotenv').config()
 const uniswap = require('./uniswap')
 const percentageChange = require('./percentageChange')
 const maximise = require('./maximise')
+const {unsubscribe} = require('./blocknative')
 const { InsufficientInputAmountError } = require('@uniswap/sdk')
 
 const isProfitable = async (filteredTransaction) => {
@@ -10,15 +11,18 @@ const isProfitable = async (filteredTransaction) => {
     var etherValue = filteredTransaction.etherValue;
     let tokenOutAmount = filteredTransaction.amountOutMin
 
-    let { priceIncrease ,eth, pairToken } = await percentageChange(pair.liquidityToken.address.toLowerCase(),etherValue,tokenOutAmount)
+    let { priceIncrease, eth, pairToken } = await percentageChange(pair.liquidityToken.address.toLowerCase(),etherValue,tokenOutAmount)
+    
     let MaximumEtherLoss = etherValue - (eth.price * tokenOutAmount)
 
-    let threshHold = 1 + (MaximumEtherLoss / etherValue * 0.7);
+    let threshHold = 1 + ((MaximumEtherLoss / etherValue)*0.7);
+
     // front run amount = x converted to usd
-    let frontRunAmount = MaximumEtherLoss * process.env.ETHPRICE * 0.5
+    let revenue = MaximumEtherLoss * process.env.ETHPRICE * 0.5
+
     let cost = (filteredTransaction.gas / 25e8)
 
-    if ((frontRunAmount - cost) > 50) {
+    if ((revenue - cost) > 50) {
 
         console.log(filteredTransaction.txHash)
         console.log(filteredTransaction.etherValue)
@@ -27,8 +31,12 @@ const isProfitable = async (filteredTransaction) => {
         console.log(filteredTransaction.txHash)
 
         let tokenToBuy = await maximise(eth, pairToken, threshHold)
-        
-        if (tokenToBuy * priceIncrease*process.env.ETHPRICE - cost) {
+
+        let totalMoney = (tokenToBuy * priceIncrease * 1000 - cost)
+        console.log( parseFloat(totalMoney))
+        if (parseFloat(totalMoney)>50) {
+            console.log("unsubscribe from uniswap")
+            unsubscribe()
             console.log(tokenToBuy)
             let trade = uniswap.createTrade(pair, uniswap.weth, tokenToBuy * 1e18)
             return {

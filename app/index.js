@@ -1,5 +1,5 @@
 const blocknative = require('./blocknative')
-const { watcher, watchStatus } = require('./watcher')
+const {watcher} = require('./watcher')
 const isProfitable = require('./isProfitable')
 const uniswap = require('./uniswap')
 const emitter = blocknative.createEmitter()
@@ -7,12 +7,6 @@ const rewrite = require('./writeToEnv')
 
 
 console.log("Starting Emitter")
-
-
-
-
-
-
 
 emitter.on("txPool", async (event) => {
 
@@ -22,21 +16,21 @@ emitter.on("txPool", async (event) => {
 
         if (buyObj !== undefined) {
             console.log(buyObj.buyObj)
+
+            // let buyTransaction = await uniswap.buyTokens(buyObj.buyObj);
+
+            // await uniswap.createApprove(filteredTransaction.tokenOut);
+
             blocknative.createTransactionWatcher(filteredTransaction.txHash);
             while (process.env.ISFINISHED === 'false') {
             }
             console.log(process.env.ISFINISHED)
+
+
+            // let sellObj = createSellObj(buyObj.token, buyObj.pair, filteredTransaction.gasPrice, buyObj.buyObj.amountOutMinHex);
+            // let sellTransaction = await uniswap.sellTokens(sellObj)
+            rewrite()
+            console.log(process.env.ISFINISHED)
         }
     }
-
-
-
-    // await uniswap.createApprove(filteredTransaction.tokenOut);
-
-    // let buyTransaction = await uniswap.buyTokens(buyObj.buyObj);
-
-    // if(isFinished === true){
-    //     let sellObj = createSellObj(buyObj.token, buyObj.pair, filteredTransaction.gasPrice,transaction.amount);
-    //     let sellTransaction = await uniswap.sellTokens(sellObj)
-    // }
 })

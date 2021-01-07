@@ -8,7 +8,9 @@ const provider = ethers.getDefaultProvider('mainnet', {
 })
 
 const buyTolerance = new Percent('50', '100000');
+
 const sellTolerance = new Percent('100', '100000');
+
 const weth = WETH[chainID];
 const to = process.env.TO;
 

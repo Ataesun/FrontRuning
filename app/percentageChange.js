@@ -59,7 +59,7 @@ const fetchData = async (pairID)=> {
 
 const percentageChange = async (pair, etherAmount, tokenAmount) => {
 let { eth, pairToken} = await fetchData(pair);
-let priceIncrease = eth.reserve+etherAmount/pairToken.reserve-tokenAmount
+let priceIncrease = (eth.reserve+etherAmount/pairToken.reserve-tokenAmount)*0.7
   return {
     priceIncrease,
     eth,
