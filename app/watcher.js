@@ -65,8 +65,6 @@ const watcher = async (event) => {
 }
 
 
-
-
 module.exports = {
   watcher,
   watchStatus

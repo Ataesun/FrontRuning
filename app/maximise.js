@@ -14,6 +14,10 @@ const maximise = async(eth,pairToken,threshHold) =>{
 
     console.log("calcuated newPrice :" + parseFloat(eth.reserve+x)/(pairToken.reserve - (x*pairToken.price)))
 
+    if(x > 3) {
+        return 3;
+    }
+
     return x;
 
     // return ethBuy
