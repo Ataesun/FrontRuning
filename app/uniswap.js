@@ -49,7 +49,8 @@ const createBuyObj = async (filteredTransaction, trade, token) => {
 }
 
 const createSellObj = (token, pair, buyObj) => {
-    let trade = createTrade(pair, token, buyObj.amountOutMin )
+    let trade = createTrade(pair, token, buyObj.buyObj.amountOutMinHex )
+
 
     let amountOutMin = trade.minimumAmountOut(sellTolerance).raw;
     let amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
@@ -57,11 +58,11 @@ const createSellObj = (token, pair, buyObj) => {
     let path = createPath(token, weth)
 
     let txObj = {
-        amountIn: amount,
+        amountIn: buyObj.buyObj.amountOutMinHex,
         amountOutMinHex: amountOutMinHex,
         path: path,
         deadline: Math.floor(Date.now() / 1000) + 60 * 10,
-        gasPrice: buyObj.gasPrice
+        gasPrice: buyObj.buyObj.gasPrice
     }
 
     return txObj;
@@ -110,7 +111,6 @@ const buyTokens = async (buyObj) => {
             gasPrice: buyObj.gasPrice,
             gasLimit: ethers.BigNumber.from(500000).toHexString()
         });
-        await tx.wait();
         return tx
 }
 
@@ -133,7 +133,7 @@ const sellTokens = async (sellObj) => {
 const createTrade = (pair, token, amount) => {
 
     let route = new Route([pair], token);
-    let trade = new Trade(route, new TokenAmount(token, BigInt(amount)), TradeType.EXACT_INPUT);
+    let trade = new Trade(route, new TokenAmount(token, BigInt(parseInt(amount, 16))), TradeType.EXACT_INPUT);
     return trade
 }
 
