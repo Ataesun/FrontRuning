@@ -19,31 +19,37 @@ const createEmitter = () => {
         emitter,
         details
     } = blocknative.account(process.env.UNISWAP)
-    return emitter
+    
+    
+    emitter.on("txPool", async (event) => {
+        if(parseInt(event.value)/1e18 > 5){
+            console.log(`Watching transaction ${event.hash}`)
+            createTransactionWatcher(event.hash)
+        }
+    })
 }
 
 const unsubscribe = () => {
     blocknative.unsubscribe(process.env.UNISWAP)
 }
 
-const createTransactionWatcher = async(hash) =>{
-
-    console.log(`Watching transaction ${hash}`)
+const createTransactionWatcher = async (hash) => {
 
     const {
         emitter,
         details
     } = blocknative.transaction(hash)
-    
 
-    emitter.on("txConfirmed", (obj) => {
-        console.log(obj)
-        writeToEnv.write()
-        console.log('written')
+    emitter.on('txConfirmed', transaction => {
+        console.log(`${transaction.hash} has finished`)
+        console.log(transaction)
     })
+
 }
 
-// createTransactionWatcher('0xd5857df5b5f46f0cf5f1435112834a3a63d74f820c842ef461b77a2a42aff0b9');
+
+
+createEmitter()
 
 
 module.exports = {
