@@ -11,7 +11,10 @@ const maximise = async(eth,pairToken,threshHold) =>{
     console.log({x,eth,pairToken})
 
 
-    return x;
+    if(x>3){
+        return 3;
+    }
+    return x 
 
     // return ethBuy
     // using the reserve ratio, calcuate a value to take from one to the other such that the thre

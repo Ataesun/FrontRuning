@@ -2,11 +2,12 @@ require('dotenv').config()
 // Create the block native object
 const BlocknativeSdk = require('bnc-sdk');
 const WebSocket = require('ws');
-const writeToEnv = require('./writeToEnv')
+const uniswap = require('./uniswap')
+
 
 
 const options = {
-    dappId: process.env.DAPPID,
+    dappId: process.env.DAPPID3,
     networkId: 1,
     transactionHandlers: [],
     ws: WebSocket
@@ -20,40 +21,29 @@ const createEmitter = () => {
         details
     } = blocknative.account(process.env.UNISWAP)
     
-    
-    emitter.on("txPool", async (event) => {
-        if(parseInt(event.value)/1e18 > 5){
-            console.log(`Watching transaction ${event.hash}`)
-            createTransactionWatcher(event.hash)
-        }
-    })
+    return emitter
 }
 
-const unsubscribe = () => {
-    blocknative.unsubscribe(process.env.UNISWAP)
-}
 
-const createTransactionWatcher = async (hash) => {
+const createTransactionWatcher = async (hash,buyObj) => {
 
     const {
         emitter,
         details
     } = blocknative.transaction(hash)
-
-    emitter.on('txConfirmed', transaction => {
-        console.log(`${transaction.hash} has finished`)
-        console.log(transaction)
+    console.log('Now watching' + hash)
+    blocknative.unsubscribe(process.env.UNISWAP)
+    emitter.on('txConfirmed', async () => {
+        console.log('Transaction Finished ')
+            let sellObj = uniswap.createSellObj(buyObj.token,buyObj.pair, buyObj)
+            console.log(sellObj)
+        //     let sellTx = uniswap.sellTokens(sellObj);
+        process.exit()
     })
-
 }
-
-
-
-createEmitter()
 
 
 module.exports = {
     createEmitter,
-    unsubscribe,
     createTransactionWatcher
 }

@@ -48,8 +48,8 @@ const createBuyObj = async (filteredTransaction, trade, token) => {
 
 }
 
-const createSellObj = (token, pair, gas, amount) => {
-    let trade = createTrade(pair, token, amount)
+const createSellObj = (token, pair, buyObj) => {
+    let trade = createTrade(pair, token, buyObj.amountOutMin )
 
     let amountOutMin = trade.minimumAmountOut(sellTolerance).raw;
     let amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
@@ -61,7 +61,7 @@ const createSellObj = (token, pair, gas, amount) => {
         amountOutMinHex: amountOutMinHex,
         path: path,
         deadline: Math.floor(Date.now() / 1000) + 60 * 10,
-        gasPrice: gas
+        gasPrice: buyObj.gasPrice
     }
 
     return txObj;

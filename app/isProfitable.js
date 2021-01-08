@@ -2,7 +2,7 @@ require('dotenv').config()
 const uniswap = require('./uniswap')
 const percentageChange = require('./percentageChange')
 const maximise = require('./maximise')
-const {unsubscribe} = require('./blocknative')
+const { unsubscribe } = require('./blocknative')
 const { InsufficientInputAmountError } = require('@uniswap/sdk')
 
 const isProfitable = async (filteredTransaction) => {
@@ -11,33 +11,31 @@ const isProfitable = async (filteredTransaction) => {
     var etherValue = filteredTransaction.etherValue;
     let tokenOutAmount = filteredTransaction.amountOutMin
 
-    let { priceIncrease, eth, pairToken } = await percentageChange(pair.liquidityToken.address.toLowerCase(),etherValue,tokenOutAmount)
-    
+    let { priceIncrease, eth, pairToken } = await percentageChange(pair.liquidityToken.address.toLowerCase(), etherValue, tokenOutAmount)
+
+    console.log(`price incraese ${priceIncrease}`)
+
     let MaximumEtherLoss = etherValue - (eth.price * tokenOutAmount)
 
-    let threshHold = 1 + ((MaximumEtherLoss / etherValue)*0.7);
+    let threshHold = 1 + ((MaximumEtherLoss / etherValue) * 0.7);
 
     // front run amount = x converted to usd
     let revenue = MaximumEtherLoss * process.env.ETHPRICE * 0.5
 
-    let cost = (filteredTransaction.gas / 25e8)
+    let cost = (filteredTransaction.gasPrice / 25e8)
+    console.log(filteredTransaction.txHash)
+    console.log(revenue - cost)
+
 
     if ((revenue - cost) > 50) {
 
-        console.log(filteredTransaction.txHash)
-        console.log(filteredTransaction.etherValue)
-        console.log(`They are willing to lose ${MaximumEtherLoss}`)
-        console.log((`they are willing to see a price rise of ${threshHold}`))
-        console.log(filteredTransaction.txHash)
 
         let tokenToBuy = await maximise(eth, pairToken, threshHold)
 
-        let totalMoney = (tokenToBuy * priceIncrease * 1000 - cost)
-        console.log( parseFloat(totalMoney))
-        if (parseFloat(totalMoney)>50) {
-            console.log("unsubscribe from uniswap")
-            unsubscribe()
-            console.log(tokenToBuy)
+        let totalMoney = (tokenToBuy * priceIncrease * process.env.ETHPRICE - cost)
+        console.log(totalMoney)
+        if (parseFloat(totalMoney) - cost > 50) {
+
             let trade = uniswap.createTrade(pair, uniswap.weth, tokenToBuy * 1e18)
             return {
                 buyObj: await uniswap.createBuyObj(filteredTransaction, trade, token),
