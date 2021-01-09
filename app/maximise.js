@@ -15,9 +15,6 @@ const maximise = async(eth,pairToken,threshHold) =>{
         return 3;
     }
     return x 
-
-    // return ethBuy
-    // using the reserve ratio, calcuate a value to take from one to the other such that the thre
 }
 
 module.exports = maximise

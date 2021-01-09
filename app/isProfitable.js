@@ -27,14 +27,11 @@ const isProfitable = async (filteredTransaction) => {
     console.log(revenue - cost)
 
 
-    if (revenue> 50) {
-
-
+    if (revenue-cost> 50) {
         let tokenToBuy = await maximise(eth, pairToken, threshHold)
         let totalMoney = (tokenToBuy * priceIncrease * process.env.ETHPRICE )
         console.log(`Total money is ${totalMoney} , Cost is ${cost}`)
         if (parseFloat(totalMoney)-cost > 50) {
-
             let trade = uniswap.createTrade(pair, uniswap.weth, tokenToBuy * 1e18)
             return {
                 buyObj: await uniswap.createBuyObj(filteredTransaction, trade, token),

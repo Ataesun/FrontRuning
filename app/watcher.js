@@ -28,7 +28,7 @@ const watcher = async (event) => {
         event.contractCall.params.path[1].toLowerCase() !== '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'.toLocaleLowerCase()
       ) {
 
-        if (event.contractCall.params.amountOutMin !== undefined) {
+        if (event.contractCall.params.amountOutMin !== undefined && event.value/1e18 > 3  ) {
           // if all cases are passed, passes object with unmodified key data
 
           let obj = {
