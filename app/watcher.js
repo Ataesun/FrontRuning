@@ -1,10 +1,15 @@
 require('dotenv').config()
 const axios = require('axios').default;
 
-const precise = async (token,x) => {
+const precise = async (token) => {
   let sig = await axios.get(`https://api.ethplorer.io/getTokenInfo/${token}?apiKey=${process.env.TOKENKEY}`);
-  sig = sig.data.decimals
-  return sig;
+  decimals = sig.data.decimals
+  holdersCount = sig.data.holdersCount
+
+  return {
+    decimals,
+    holdersCount
+  };
 }
 
 
@@ -42,9 +47,16 @@ const watcher = async (event) => {
             deadline: parseInt(event.contractCall.params.deadline)
           }
 
-          obj.decimals = await precise(obj.tokenOut,obj.amountOutMin)
+          let ret = await precise(obj.tokenOut,obj.amountOutMin)
+          obj.decimals = ret.decimals;
+          obj.holdersCount = ret.holdersCount;
+
           obj.amountOutMin = Number.parseFloat(obj.amountOutMin)/Math.pow(10, obj.decimals)
-          
+          if(holdersCount<200){
+            return undefined
+          }
+
+          console.log(obj)
           return obj;
         }
       }
