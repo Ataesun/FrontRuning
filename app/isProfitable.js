@@ -23,7 +23,7 @@ const isProfitable = async (filteredTransaction) => {
     // front run amount = x converted to usd
     let revenue = MaximumEtherLoss * process.env.ETHPRICE * 0.5
 
-    let cost = (filteredTransaction.gasPrice / 25e8)
+    let cost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
     console.log('Their txHash '+filteredTransaction.txHash)
     console.log(revenue - cost)
 

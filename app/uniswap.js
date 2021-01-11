@@ -35,6 +35,8 @@ const createBuyObj = async (filteredTransaction, trade, token) => {
     let inputAmount = trade.inputAmount.raw;
     let inputAmountHex = ethers.BigNumber.from(inputAmount.toString()).toHexString();
 
+    console.log('their gas ' + filteredTransaction.gasPrice)
+
     let txObj = {
         // frontRunningHash : filteredTransaction.txHash,
         amountOutMinHex: amountOutMinHex,
@@ -43,6 +45,7 @@ const createBuyObj = async (filteredTransaction, trade, token) => {
         deadline: Math.floor(Date.now() / 1000) + 60 * 10,
         gasPrice: filteredTransaction.gasPrice + 40e9
     }
+    console.log('our gas ' + txObj.gasPrice)
     console.log(`The token adress is ${token.address}`)
 
     console.log("Returning TxObj back to index,js")

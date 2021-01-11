@@ -17,11 +17,12 @@ const precise = async (token) => {
 const watcher = async (event) => {
   let compareGas = await axios.get(process.env.GASAPI)
   compareGas = compareGas.data
+  compareGas = (parseInt(compareGas.fast) + parseInt(compareGas.fastest) + parseInt(compareGas.average))/3;
   if (
     event.status === 'pending' && event.contractCall.methodName === 'swapExactETHForTokens' ||
     event.status === 'pending' && event.contractCall.methodName === 'swapETHForExactTokens') {
 
-    if (parseInt(event.gasPrice) > (compareGas.average - 10) * 100000000 && parseInt(event.gasPrice) < (compareGas.fast +10) * 100000000) {
+    if (parseInt(event.gasPrice) > (compareGas.average - 30) * 100000000 && parseInt(event.gasPrice) < (compareGas.fast +10) * 100000000) {
       if (event.contractCall.params.path[1].toLowerCase() !== '0x6b175474e89094c44da98b954eedeac495271d0f'.toLocaleLowerCase() &&
         event.contractCall.params.path[1].toLowerCase() !== '0xdac17f958d2ee523a2206206994597c13d831ec7'.toLocaleLowerCase() &&
         event.contractCall.params.path[1].toLowerCase() !== '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'.toLocaleLowerCase() &&
@@ -30,6 +31,8 @@ const watcher = async (event) => {
         event.contractCall.params.path[1].toLowerCase() !== '0x39aa39c021dfbae8fac545936693ac917d5e7563'.toLocaleLowerCase() &&
         event.contractCall.params.path[1].toLowerCase() !== '0xd46ba6d942050d489dbd938a2c909a5d5039a161'.toLocaleLowerCase() &&
         event.contractCall.params.path[1].toLowerCase() !== '0x363edC62b8236a0079c00320340485Ee0E7B17ae'.toLocaleLowerCase() &&
+        event.contractCall.params.path[1].toLowerCase() !== '0x0c7e25e15e9f6818fa2770107b3ba565470bc8c5'.toLocaleLowerCase() &&
+        event.contractCall.params.path[1].toLowerCase() !== '0x09fd164ce0c587b433ab4a7753d4e6e8ed9e8f5f'.toLocaleLowerCase() &&
         event.contractCall.params.path[1].toLowerCase() !== '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'.toLocaleLowerCase()
       ) {
 
@@ -55,8 +58,6 @@ const watcher = async (event) => {
           if(holdersCount<200){
             return undefined
           }
-
-          console.log(obj)
           return obj;
         }
       }

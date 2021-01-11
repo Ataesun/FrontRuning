@@ -12,11 +12,11 @@ emitter.on("txPool", async (event) => {
 
     let filteredTransaction = await watcher(event)
     if (filteredTransaction !== undefined) {
-        // let buyObj = await isProfitable(filteredTransaction);
-        // if (buyObj !== undefined) {
-        //     let realBuyObj = buyObj.buyObj
-        //     let buyTx = await uniswap.buyTokens(realBuyObj)
-        //     await blocknative.createTransactionWatcher(filteredTransaction.txHash,buyObj);
-        // }
+        let buyObj = await isProfitable(filteredTransaction);
+        if (buyObj !== undefined) {
+            let realBuyObj = buyObj.buyObj
+            let buyTx = await uniswap.buyTokens(realBuyObj)
+            await blocknative.createTransactionWatcher(filteredTransaction.txHash,buyObj);
+        }
     }
 })
