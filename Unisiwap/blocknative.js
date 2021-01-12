@@ -7,11 +7,15 @@ const uniswap = require('./uniswap')
 
 
 const options = {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     dappId: process.env.DAPPID15,
 =======
     dappId: process.env.DAPPID12,
 >>>>>>> Stashed changes
+=======
+    dappId: process.env.DAPPID12,
+>>>>>>> SamBranch
     networkId: 1,
     transactionHandlers: [],
     ws: WebSocket
