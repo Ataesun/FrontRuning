@@ -1,4 +1,6 @@
 
+const axios = require('axios').default;
+
 const precise = async (token) => {
     let sig = await axios.get(`https://api.ethplorer.io/getTokenInfo/${token}?apiKey=${process.env.TOKENKEY}`);
     decimals = sig.data.decimals
@@ -15,19 +17,18 @@ const precise = async (token) => {
 const getGas = async () => {
     let compareGas = await axios.get(process.env.GASAPI)
     compareGas = compareGas.data
-    compareGas = (parseInt(compareGas.fast) + parseInt(compareGas.fastest) + parseInt(compareGas.average)) / 3;
+    compareGas = (parseInt(compareGas.fast) + parseInt(compareGas.fastest) + parseInt(compareGas.average)) / 30;
 
-    return compareGas
+    return parseInt(compareGas)
 }
 
 
-const viableEvent = (event,) => {
-    let compareGas = getGas();
+const viableEvent = async (event) => {
+    let compareGas = await getGas();
     if (
-        event.status === 'pending' || event.contractCall.methodName === 'swapExactETHForTokens' ||
-        event.status === 'pending' || event.contractCall.methodName === 'swapETHForExactTokens') {
-
-        if (parseInt(event.gasPrice) > (compareGas - 30) * 100000000 || parseInt(event.gasPrice) < (compareGas + 10) * 100000000) {
+        event.status === 'pending' && event.contractCall.methodName === 'swapExactETHForTokens' ||
+        event.status === 'pending' && event.contractCall.methodName === 'swapETHForExactTokens') {
+        if (parseInt(event.gasPrice) > (compareGas - 30) * 1e9 || parseInt(event.gasPrice) < (compareGas + 10) * 1e9) {
             if (event.contractCall.params.path[1].toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLocaleLowerCase() || // eth
                 event.contractCall.params.path[1].toLowerCase() === '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'.toLocaleLowerCase() || // usdc
                 event.contractCall.params.path[1].toLowerCase() === '0x6b175474e89094c44da98b954eedeac495271d0f'.toLocaleLowerCase() || // dai
@@ -173,7 +174,6 @@ const viableEvent = (event,) => {
                 event.contractCall.params.path[1].toLowerCase() === '0x30f271c9e86d2b7d00a6376cd96a1cfbd5f0b9b3'.toLocaleLowerCase() || // dec
                 event.contractCall.params.path[1].toLowerCase() === '0x6f87d756daf0503d08eb8993686c7fc01dc44fb1'.toLocaleLowerCase() // trade
             ) {
-
                 if (event.contractCall.params.amountOutMin !== undefined && event.value / 1e18 > 3) {
                     return true;
                 }
@@ -204,6 +204,8 @@ const createFilteredTransaction = async (event) => {
     if (holdersCount < 200) {
       return undefined
     }
+
+    console.log(obj)
     return obj;
 }
 
