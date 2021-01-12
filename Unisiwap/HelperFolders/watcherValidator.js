@@ -205,7 +205,6 @@ const createFilteredTransaction = async (event) => {
       return undefined
     }
 
-    console.log(obj)
     return obj;
 }
 
