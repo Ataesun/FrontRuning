@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const fetchData = async (pairID)=> {
+const getData = async (pairID)=> {
   let response = await axios({
     url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
     method: 'post',
@@ -58,7 +58,7 @@ const fetchData = async (pairID)=> {
 }
 
 const percentageChange = async (pair, etherAmount, tokenAmount) => {
-let { eth, pairToken} = await fetchData(pair);
+let { eth, pairToken} = await getData(pair);
 let priceIncrease = ((parseFloat(eth.reserve)+etherAmount)/(parseFloat(pairToken.reserve)-tokenAmount)/(parseFloat(eth.reserve)/parseFloat(pairToken.reserve))-1)*0.7
 
   return {

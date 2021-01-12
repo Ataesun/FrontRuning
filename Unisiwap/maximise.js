@@ -1,8 +1,5 @@
-const { ethers } = require("ethers");
 
 const maximise = async(eth,pairToken,threshHold) =>{
-
-    // console.log({eth,pairToken,threshHold})
 
     let newPrice = Number.parseFloat(threshHold*eth.price);  
     let lhs = Number.parseFloat((newPrice*(pairToken.reserve)-eth.reserve))
