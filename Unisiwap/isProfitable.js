@@ -19,13 +19,11 @@ const isProfitable = async (filteredTransaction) => {
     }
     let threshHold = 1 + ((MaximumEtherLoss / etherValue) * 0.7);
 
-    let revenue = MaximumEtherLoss * process.env.ETHPRICE * 0.7
-    let profit = revenue *priceIncrease
+    let willingToLoseUsd = MaximumEtherLoss * process.env.ETHPRICE * 0.7
 
-    let cost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
+    let GasCost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
 
     console.log(filteredTransaction.txHash)
-    
     
     console.log("Price increase : " + priceIncrease)
     
@@ -33,9 +31,8 @@ const isProfitable = async (filteredTransaction) => {
     
     console.log("Etherum value :" + etherValue)
     
-    console.log(`revenue = ${revenue}
-profit = ${profit}
-cost  = ${cost}`)
+    console.log(`Willing to lose usd = ${willingToLoseUsd}
+GasCost  = ${GasCost}`)
     
     if (revenue-cost> 50) {
         let tokenToBuy = await maximise(eth, pairToken, threshHold)
