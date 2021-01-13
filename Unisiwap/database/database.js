@@ -18,7 +18,7 @@ const getData = async (pairID) => {
     tokenDayDatas (orderBy : dailyVolumeUSD , orderDirection : desc , 
     where : {
       date_gt : ${time},
-      dailyVolumeUSD_gt : 50000
+      dailyVolumeUSD_gt : 100000
     }){
       token{
         name

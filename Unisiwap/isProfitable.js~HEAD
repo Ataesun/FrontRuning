@@ -7,7 +7,7 @@ const maximise = require('./maximise')
 
 
 const isProfitable = async (filteredTransaction) => {
-
+console.log('in is profitable')
     let etherValue = filteredTransaction.etherValue;
     let tokenOutAmount = filteredTransaction.amountOutMin
 
@@ -20,20 +20,21 @@ const isProfitable = async (filteredTransaction) => {
     }
     let threshHold = 1 + ((MaximumEtherLoss / etherValue) * 0.7);
 
-    let revenue = MaximumEtherLoss * process.env.ETHPRICE * 0.7
-    let profit = revenue *priceIncrease
+    let revenue = MaximumEtherLoss * process.env.ETHPRICE * 0.5
 
+<<<<<<< HEAD:Unisiwap/isProfitable.js
     let cost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
+=======
+    let cost = (filteredTransaction.gasPrice / 25e8)
+    console.log('Their txHash '+filteredTransaction.txHash)
+    console.log(revenue - cost)
+>>>>>>> parent of af2f1c5... Gas fixed:app/isProfitable.js
 
-    console.log(filteredTransaction.txHash)
+    console.log(priceIncrease)
 
-    console.log("Price increase : " + priceIncrease)
+    console.log(MaximumEtherLoss)
 
-    console.log("Maximumu ether los : " + MaximumEtherLoss)
-    
-    console.log("Etherum value :" + etherValue)
-
-    console.log(`profit = ${profit}
+    console.log(`Revenue = ${revenue}
 cost  = ${cost}`)
     
     if (revenue-cost> 50) {

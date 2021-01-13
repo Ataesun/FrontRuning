@@ -6,8 +6,8 @@ const maximise = async(eth,pairToken,threshHold) =>{
     let rhs = Number.parseFloat(1+(newPrice*pairToken.price))
     let x = lhs/rhs
 
-    if(x>1.5){
-        return 1.5;
+    if(x>2.5){
+        return 2.5;
     }
     return x 
 }

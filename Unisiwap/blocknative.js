@@ -7,7 +7,7 @@ const uniswap = require('./uniswap')
 
 
 const options = {
-    dappId: process.env.DAPPID14,
+    dappId: process.env.DAPPID7,
     networkId: 1,
     transactionHandlers: [],
     ws: WebSocket
@@ -33,16 +33,6 @@ const createTransactionWatcher = async (hash,buyObj) => {
     } = blocknative.transaction(hash)
 
     return emitter
-
-    console.log('Now watching' + hash)
-    blocknative.unsubscribe(process.env.UNISWAP)
-    emitter.on('txConfirmed', async () => {
-        console.log('Transaction Finished ')
-            // let sellObj = uniswap.getSellObj(buyObj.token,buyObj.pair, buyObj)
-            // console.log(sellObj)
-            // let sellTx = uniswap.sellTokens(sellObj);
-        process.exit()
-    })
 }
 
 
