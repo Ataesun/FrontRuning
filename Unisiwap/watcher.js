@@ -3,6 +3,7 @@ const {viableEvent, createFilteredTransaction} = require('./HelperFolders/watche
 
 
 const watcher = async (event) => {
+
   if (await viableEvent(event)) {
     let filteredTransaction = await createFilteredTransaction(event)
     return filteredTransaction  

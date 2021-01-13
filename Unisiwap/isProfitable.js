@@ -1,6 +1,6 @@
 require('dotenv').config()
 const uniswap = require('./uniswap')
-const {Weth} = require('./HelperFolders/uniswapConstants')
+const { Weth } = require('./HelperFolders/uniswapConstants')
 const percentageChange = require('./percentageChange')
 const maximise = require('./maximise')
 
@@ -14,38 +14,41 @@ const isProfitable = async (filteredTransaction) => {
     let { priceIncrease, eth, pairToken } = await percentageChange(pair.liquidityToken.address.toLowerCase(), etherValue, tokenOutAmount)
 
     let MaximumEtherLoss = etherValue - (eth.price * tokenOutAmount)
-    if(MaximumEtherLoss <0){
+    if (MaximumEtherLoss < 0) {
         return undefined
     }
     let threshHold = 1 + ((MaximumEtherLoss / etherValue) * 0.7);
 
-    let willingToLoseUsd = MaximumEtherLoss * process.env.ETHPRICE * 0.7
+    console.log('')
+    console.log('threshHold')    
+    console.log(threshHold)
+    console.log('MaximumEtherLoss')
+    console.log(MaximumEtherLoss)
+
+    let willingToLoseUsd = MaximumEtherLoss * process.env.ETHPRICE
 
     let GasCost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
 
-    console.log(filteredTransaction.txHash)
-    
-    console.log("Price increase : " + priceIncrease)
-    
-    console.log("Maximumu ether loss : " + MaximumEtherLoss)
-    
-    console.log("Etherum value :" + etherValue)
-    
-    console.log(`Willing to lose usd = ${willingToLoseUsd}
-GasCost  = ${GasCost}`)
-    
-    if (revenue-cost> 50) {
-        let tokenToBuy = await maximise(eth, pairToken, threshHold)
-        let totalMoney = (tokenToBuy * priceIncrease * process.env.ETHPRICE )
-        console.log(totalMoney-cost)
-        if (parseFloat(totalMoney)-cost > 40) {
-            console.log({tokenToBuy,eth,pairToken})
-            let trade = uniswap.getTrade(pair, Weth, tokenToBuy * 1e18)
-            return {
-                buyObj: await uniswap.getBuyObj(filteredTransaction, trade, token),
-                token,
-                pair,
-            }
+    // console.log(filteredTransaction.txHash)
+
+    // console.log("Price increase : " + priceIncrease)
+
+    // console.log("Maximumu ether loss : " + MaximumEtherLoss)
+
+    // console.log("Etherum value :" + etherValue)
+
+    // console.log(`Willing to lose usd = ${willingToLoseUsd} GasCost  = ${GasCost}`)
+
+    let tokenToBuy = await maximise(eth, pairToken, threshHold)
+    let totalMoney = (tokenToBuy * priceIncrease * process.env.ETHPRICE)
+    console.log(totalMoney - GasCost)
+    if (parseFloat(totalMoney) - GasCost > 40) {
+        console.log({ tokenToBuy, eth, pairToken })
+        let trade = uniswap.getTrade(pair, Weth, tokenToBuy * 1e18)
+        return {
+            buyObj: await uniswap.getBuyObj(filteredTransaction, trade, token),
+            token,
+            pair,
         }
     }
     return undefined

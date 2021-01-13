@@ -28,6 +28,7 @@ const getGas = async () => {
 
 
 const viableEvent = async (event) => {
+
     let compareGas = await getGas();
     if (
         event.status === 'pending' && event.contractCall.methodName === 'swapExactETHForTokens' ||
@@ -180,6 +181,7 @@ const viableEvent = async (event) => {
                 event.contractCall.params.path[path.length - 1].toLowerCase() === '0x6f87d756daf0503d08eb8993686c7fc01dc44fb1'.toLocaleLowerCase() // trade
             ) {
                 if (event.contractCall.params.amountOutMin !== undefined && event.value > 1e18) {
+
                     return true;
                 }
             }
@@ -209,6 +211,10 @@ const createFilteredTransaction = async (event) => {
     if (holdersCount < 200) {
         return undefined
     }
+
+    console.log('')
+    console.log(event.hash)
+    console.log(parseInt(event.value)/1e18)
 
     return obj;
 }
