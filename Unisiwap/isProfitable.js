@@ -7,7 +7,7 @@ const maximise = require('./maximise')
 
 
 const isProfitable = async (filteredTransaction) => {
-
+console.log('in is profitable')
     let etherValue = filteredTransaction.etherValue;
     let tokenOutAmount = filteredTransaction.amountOutMin
 
@@ -24,9 +24,13 @@ const isProfitable = async (filteredTransaction) => {
 
     let cost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
 
+    console.log(priceIncrease)
+
+    console.log(MaximumEtherLoss)
+
+    console.log(`Revenue = ${revenue}
+cost  = ${cost}`)
     
-    console.log('Revenue - cost ')
-    console.log(revenue- cost)
     if (revenue-cost> 50) {
         let tokenToBuy = await maximise(eth, pairToken, threshHold)
         let totalMoney = (tokenToBuy * priceIncrease * process.env.ETHPRICE )

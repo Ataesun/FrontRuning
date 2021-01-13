@@ -1,21 +1,23 @@
-const {ChainID, BuyTolerance, SellTolerance, Ethers, Weth, Buy, Sell} = require('./HelperFolders/uniswapConstants')
+const { ChainID, BuyTolerance, SellTolerance, Ethers, Weth, Buy, Sell } = require('./HelperFolders/uniswapConstants')
 
-const {  Fetcher, Trade, TokenAmount, Route, Token, TradeType} = require('@uniswap/sdk');
+const { Fetcher, Trade, TokenAmount, Route, Token, TradeType } = require('@uniswap/sdk');
 
-const getInputOutput = (trade, tolerance) =>{
+const getInputOutput = (trade, tolerance) => {
     let amountOutMin = trade.minimumAmountOut(tolerance).raw;
     let amountOutMinHex = Ethers.BigNumber.from(amountOutMin.toString()).toHexString();
     let inputAmount = trade.inputAmount.raw;
     let inputAmountHex = Ethers.BigNumber.from(inputAmount.toString()).toHexString();
 
     return {
-        amountOutMinHex : amountOutMinHex,
-        inputAmountHex : inputAmountHex
+        amountOutMinHex: amountOutMinHex,
+        inputAmountHex: inputAmountHex
     }
 }
 
 const getTrade = (pair, token, amount) => {
+
     let route = new Route([pair], token);
+    console.log(route)
     let trade = new Trade(route, new TokenAmount(token, BigInt(amount)), TradeType.EXACT_INPUT);
     return trade
 }
@@ -50,7 +52,7 @@ const getPath = (tokenFrom, tokenTo) => {
 
 const getBuyObj = async (filteredTransaction, trade, token) => {
 
-    let {inputAmountHex, amountOutMinHex} = getInputOutput(trade,BuyTolerance)
+    let { inputAmountHex, amountOutMinHex } = getInputOutput(trade, BuyTolerance)
     let path = getPath(Weth, token)
 
     let txObj = {
@@ -69,7 +71,7 @@ const getBuyObj = async (filteredTransaction, trade, token) => {
 const getSellObj = (token, pair, buyObj) => {
     let trade = getTrade(pair, token, buyObj.amountOutMinHex)
 
-    let amountOutMinHex = getInputOutput(trade,SellTolerance)
+    let amountOutMinHex = getInputOutput(trade, SellTolerance)
 
     let path = getPath(token, Weth)
 
@@ -133,32 +135,39 @@ module.exports = {
     ChainID,
 }
 
-// const test = async () => {
+const test = async () => {
 
-//     // let glitch = await Fetcher.fetchTokenData(ChainID, '0x09fd164ce0c587b433ab4a7753d4e6e8ed9e8f5f');
-//     let dai = await Fetcher.fetchTokenData(ChainID, '0x6b175474e89094c44da98b954eedeac495271d0f')
-//     let pair = await Fetcher.fetchPairData(dai, Weth);
+    // let glitch = await Fetcher.fetchTokenData(ChainID, '0x09fd164ce0c587b433ab4a7753d4e6e8ed9e8f5f');
+    let dai = await Fetcher.fetchTokenData(ChainID, '0x6b175474e89094c44da98b954eedeac495271d0f')
+    let pair = await Fetcher.fetchPairData(dai, Weth);
 
-//     console.log(pair.involvesToken())
+    let trade = getTrade(pair, Weth, 1e15)
+    // console.log(trade);
 
-//     // let trade = getTrade(dai, Weth, 49763.734e18)
+    // let amountOutMin = trade.minimumAmountOut(BuyTolerance).raw;
+    // let amountOutMinHex = Ethers.BigNumber.from(amountOutMin.toString()).toHexString();
+    
+    // let inputAmount = trade.inputAmount(BuyTolerance).raw
+    // let inputAmountHex = Ethers.BigNumber.from(inputAmount.toString()).toHexString();
 
-//     // let amountOutMin = trade.minimumAmountOut(BuyTolerance).raw;
-//     // let amountOutMinHex = Ethers.BigNumber.from(amountOutMin.toString()).toHexString();
+    // let path = getPath(token, Weth)
 
-//     // let path = getPath(token, Weth)
+    // let tx = await Buy.swapExactETHForTokens(
+    //     amountOutMinHex,
+    //     path,
+    //     process.env.TO,
+    //     buyObj.deadline,
+    //     {
+    //         value: inputAmountHex,
+    //         gasPrice: 1,
+    //         gasLimit: Ethers.BigNumber.from(500000).toHexString()
+    //     });
 
-//     // let txObj = {
-//     //     amountIn: buyObj.amountOutMinHex,
-//     //     amountOutMinHex: amountOutMinHex,
-//     //     path: path,
-//     //     deadline: Math.floor(Date.now() / 1000) + 60 * 10,
-//     //     gasPrice: buyObj.gasPrice + 10e9
-//     // }
+//     await tx.wait()
+//     console.log(`Approve token for selling! \n`)
+
 
 
 //     process.exit("Transaction FInished")
 // }
-
-
-// test()
+}

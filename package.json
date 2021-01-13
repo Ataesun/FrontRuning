@@ -27,7 +27,10 @@
     "envfile": "^6.14.0",
     "ethers": "^5.0.24",
     "fs": "0.0.1-security",
+    "jsdom": "^16.4.0",
+    "mongodb": "^3.6.3",
     "mysql": "^2.18.1",
+    "trie-prefix-tree": "^1.5.1",
     "ws": "^7.4.2"
   }
 }

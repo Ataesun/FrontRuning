@@ -6,12 +6,6 @@ const chainID = ChainId.MAINNET;
 // import amountIn, amountOutMin, tokenIn 
 
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> SamBranch
 const convertToEth = async (tokenIn, amount) => {
 
     const token = await Fetcher.fetchTokenData(chainID,tokenIn);
