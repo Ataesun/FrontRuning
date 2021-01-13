@@ -23,8 +23,11 @@ console.log('in is profitable')
     let revenue = MaximumEtherLoss * process.env.ETHPRICE * 0.5
 
 <<<<<<< HEAD:Unisiwap/isProfitable.js
+<<<<<<< HEAD:Unisiwap/isProfitable.js
     let cost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
 =======
+=======
+>>>>>>> parent of af2f1c5... Gas fixed:app/isProfitable.js
     let cost = (filteredTransaction.gasPrice / 25e8)
     console.log('Their txHash '+filteredTransaction.txHash)
     console.log(revenue - cost)
