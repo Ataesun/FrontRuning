@@ -11,6 +11,7 @@ console.log("Starting Emitter")
 emitter.on("txPool", async (event) => {
     let filteredTransaction = await watcher(event)
     if (filteredTransaction !== undefined) {
+<<<<<<< HEAD:Unisiwap/index.js
         let buyObj = await isProfitable(filteredTransaction);
         if (buyObj !== undefined) {
             let realBuyObj = buyObj.buyObj
@@ -25,6 +26,14 @@ emitter.on("txPool", async (event) => {
                 process.exit()
             })
         }
+=======
+        // let buyObj = await isProfitable(filteredTransaction);
+        // if (buyObj !== undefined) {
+        //     let realBuyObj = buyObj.buyObj
+        //     let buyTx = await uniswap.buyTokens(realBuyObj)
+        //     await blocknative.createTransactionWatcher(filteredTransaction.txHash,buyObj);
+        // }
+>>>>>>> parent of af2f1c5... Gas fixed:app/index.js
     }
 })
 
