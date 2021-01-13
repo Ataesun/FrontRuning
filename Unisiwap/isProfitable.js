@@ -1,9 +1,8 @@
 require('dotenv').config()
 const uniswap = require('./uniswap')
+const {Weth} = require('./HelperFolders/uniswapConstants')
 const percentageChange = require('./percentageChange')
 const maximise = require('./maximise')
-
-
 
 
 const isProfitable = async (filteredTransaction) => {
@@ -26,14 +25,16 @@ const isProfitable = async (filteredTransaction) => {
     let cost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
 
     console.log(filteredTransaction.txHash)
-
+    
+    
     console.log("Price increase : " + priceIncrease)
-
-    console.log("Maximumu ether los : " + MaximumEtherLoss)
+    
+    console.log("Maximumu ether loss : " + MaximumEtherLoss)
     
     console.log("Etherum value :" + etherValue)
-
-    console.log(`profit = ${profit}
+    
+    console.log(`revenue = ${revenue}
+profit = ${profit}
 cost  = ${cost}`)
     
     if (revenue-cost> 50) {
@@ -42,7 +43,7 @@ cost  = ${cost}`)
         console.log(totalMoney-cost)
         if (parseFloat(totalMoney)-cost > 40) {
             console.log({tokenToBuy,eth,pairToken})
-            let trade = uniswap.getTrade(pair, uniswap.weth, tokenToBuy * 1e18)
+            let trade = uniswap.getTrade(pair, Weth, tokenToBuy * 1e18)
             return {
                 buyObj: await uniswap.getBuyObj(filteredTransaction, trade, token),
                 token,

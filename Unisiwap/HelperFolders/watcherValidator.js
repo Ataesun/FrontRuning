@@ -35,11 +35,11 @@ const viableEvent = async (event) => {
         if (parseInt(event.gasPrice) > (compareGas - 30) * 1e9 || parseInt(event.gasPrice) < (compareGas + 10) * 1e9) {
             let path = event.contractCall.params.path
             if (event.contractCall.params.path[path.length - 1].toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLocaleLowerCase() || // eth
-                event.contractCall.params.path[path.length - 1].toLowerCase() === '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'.toLocaleLowerCase() || // usdc
-                event.contractCall.params.path[path.length - 1].toLowerCase() === '0x6b175474e89094c44da98b954eedeac495271d0f'.toLocaleLowerCase() || // dai
-                event.contractCall.params.path[path.length - 1].toLowerCase() === '0xdac17f958d2ee523a2206206994597c13d831ec7'.toLocaleLowerCase() || // usdt
+            //     event.contractCall.params.path[path.length - 1].toLowerCase() === '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'.toLocaleLowerCase() || // usdc
+            //     event.contractCall.params.path[path.length - 1].toLowerCase() === '0x6b175474e89094c44da98b954eedeac495271d0f'.toLocaleLowerCase() || // dai
+            //     event.contractCall.params.path[path.length - 1].toLowerCase() === '0xdac17f958d2ee523a2206206994597c13d831ec7'.toLocaleLowerCase() || // usdt
                 event.contractCall.params.path[path.length - 1].toLowerCase() === '0x6b175474e89094c44da98b954eedeac495271d0f'.toLocaleLowerCase() || // wise
-                event.contractCall.params.path[path.length - 1].toLowerCase() === '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'.toLocaleLowerCase() || // w btc
+                // event.contractCall.params.path[path.length - 1].toLowerCase() === '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'.toLocaleLowerCase() || // w btc
                 event.contractCall.params.path[path.length - 1].toLowerCase() === '0x1453dbb8a29551ade11d89825ca812e05317eaeb'.toLocaleLowerCase() || // tendies
                 event.contractCall.params.path[path.length - 1].toLowerCase() === '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2'.toLocaleLowerCase() || // maker
                 event.contractCall.params.path[path.length - 1].toLowerCase() === '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'.toLocaleLowerCase() || // uni
