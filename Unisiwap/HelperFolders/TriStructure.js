@@ -1,18 +1,15 @@
-// const trie = require('trie-prefix-tree');
-// const dbRetrieve = require('../database/database')
+const trie = require('trie-prefix-tree');
+const dbRetrieve = require('../database/database')
 
-// const getTrie = async () => {
+var myTrie = trie([]);
+const getTrie = async (myTrie) => {
+    //Retrieve data from database; 
+    let data = await dbRetrieve()
+    data.forEach(element => {
+        // store the id in a trie tree for better speed
+        myTrie.addWord(element.id)
+    });
+    return myTrie
+}
 
-//     let myTrie = trie([]);
-//     let Data = await dbRetrieve()
-//     Data.forEach(element => {
-//         myTrie.addWord(element.id)
-//     });
-
-//     return myTrie
-// }
-
-// (async () => {
-//     const myTrie = await getTrie();
-//     module.exports = myTrie
-// })();
+console.log(getTrie(myTrie))

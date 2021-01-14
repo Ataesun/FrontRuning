@@ -17,7 +17,6 @@ const getInputOutput = (trade, tolerance) => {
 const getTrade = (pair, token, amount) => {
 
     let route = new Route([pair], token);
-    console.log(route)
     let trade = new Trade(route, new TokenAmount(token, BigInt(amount)), TradeType.EXACT_INPUT);
     return trade
 }
