@@ -1,12 +1,19 @@
 
-const maximise = async(eth,pairToken,threshHold) =>{
+const maximise = async(eth,pairToken,slippage) =>{
 
-    let newPrice = Number.parseFloat(threshHold*eth.price);  
+    let newPrice = Number.parseFloat(slippage*eth.price);  
     let lhs = Number.parseFloat((newPrice*(pairToken.reserve)-eth.reserve))
     let rhs = Number.parseFloat(1+(newPrice*pairToken.price))
     let x = lhs/rhs
-    console.log('required x')
-    console.log(x)
+    console.log("")
+    console.log(lhs)
+    console.log(rhs)
+    console.log("")
+    console.log(slippage)
+    console.log(newPrice)
+    console.log(pairToken.reserve)
+    console.log(eth.reserve)
+    console.log(pairToken.price)
     if(x>2.5){
         return 2.5;
     }
@@ -25,9 +32,9 @@ module.exports = maximise
 //         price :5239.168,
 //     }
 
-//     let threshHold = 1.016;
+//     let slippage = 1.016;
 
-//     maximise(eth,pairToken,threshHold)
+//     maximise(eth,pairToken,slippage)
 // }
 
 // test();

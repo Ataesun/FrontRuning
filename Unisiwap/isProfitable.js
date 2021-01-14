@@ -18,13 +18,8 @@ const isProfitable = async (filteredTransaction) => {
         console.log('undefined slippage')
         return undefined
     }
-    let threshHold = 1 + ((MaximumEtherLoss / etherValue) * 0.7);
+    let slippage = 1 + ((MaximumEtherLoss / etherValue) * 0.7);
 
-    console.log('')
-    console.log('threshHold')    
-    console.log(threshHold)
-    console.log('MaximumEtherLoss')
-    console.log(MaximumEtherLoss)
 
     let willingToLoseUsd = MaximumEtherLoss * process.env.ETHPRICE
 
@@ -40,7 +35,7 @@ const isProfitable = async (filteredTransaction) => {
 
     // console.log(`Willing to lose usd = ${willingToLoseUsd} GasCost  = ${GasCost}`)
 
-    let tokenToBuy = await maximise(eth, pairToken, threshHold)
+    let tokenToBuy = await maximise(eth, pairToken, slippage)
     let theoreticalProfit = (tokenToBuy * priceIncrease * process.env.ETHPRICE)
     console.log("theoretical - gascost")
     console.log(theoreticalProfit - GasCost)

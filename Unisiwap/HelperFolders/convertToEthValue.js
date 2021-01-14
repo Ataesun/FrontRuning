@@ -1,25 +1,32 @@
-const {ChainId, Fetcher, WETH, Route} = require('@uniswap/sdk');
+const { Fetcher, Route, Token } = require('@uniswap/sdk');
+const { ChainID, Weth, } = require('./uniswapConstants')
 
-const chainID = ChainId.MAINNET;
+const amountMinCalc = (obj) => {
+    if(obj.amountIn === undefined){
+        obj.amountIn = 0;
+    } else{
+        obj.amountInMax = 0;
+    }
 
-
-// import amountIn, amountOutMin, tokenIn 
-
-
-const convertToEth = async (tokenIn, amount) => {
-
-    const token = await Fetcher.fetchTokenData(chainID,tokenIn);
-    const weth = WETH[chainID];
-    const pair = await Fetcher.fetchPairData(token,weth);
-    const route = new Route([pair],weth);
-
-    var priceTokenIn = route.midPrice.invert().toSignificant(6);
-    console.log(priceTokenIn);
-
-    var EthValue = priceTokenIn * 5000
-    console.log(EthValue)
-    return EthValue
-    
+    return obj.amountInMax + obj.amountIn;
 }
 
-convertToEth('0x6b175474e89094c44da98b954eedeac495271d0f', 5000);
+
+const convertToEth = async (obj) => {
+
+    console.log(obj)
+
+    obj.amountIn = amountMinCalc(obj)
+    let token = new Token(ChainID, obj.tokenOut, obj.decimals)
+    let pair = await Fetcher.fetchPairData(token, Weth);
+    let route = new Route([pair], Weth);
+
+    let priceTokenIn = route.midPrice.invert().toSignificant(6);
+
+    obj.value = priceTokenIn * obj.amountIn
+        console.log(obj.value);
+    return obj
+
+}
+
+module.exports = convertToEth

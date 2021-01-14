@@ -1,7 +1,8 @@
 
 const axios = require('axios').default;
-const getTrie = require('./TriStructure');
-// const myTrie = getTrie();
+const convertToEth = require('./convertToEthValue')
+// const getTrie = require('./TriStructure');
+// // const myTrie = getTrie();
 
 
 
@@ -32,7 +33,9 @@ const viableEvent = async (event) => {
     let compareGas = await getGas();
     if (
         event.status === 'pending' && event.contractCall.methodName === 'swapExactETHForTokens' ||
-        event.status === 'pending' && event.contractCall.methodName === 'swapETHForExactTokens') {
+        event.status === 'pending' && event.contractCall.methodName === 'swapETHForExactTokens' ||
+        event.status === 'pending' && event.contractCall.methodName === 'swapTokensForExactTokens' ||
+        event.status === 'pending' && event.contractCall.methodName === 'swapExactTokensForTokens'){
         if (parseInt(event.gasPrice) > (compareGas - 30) * 1e9 || parseInt(event.gasPrice) < (compareGas + 10) * 1e9) {
             let path = event.contractCall.params.path
             if (event.contractCall.params.path[path.length - 1].toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLocaleLowerCase() || // eth
@@ -192,6 +195,8 @@ const viableEvent = async (event) => {
 
 const createFilteredTransaction = async (event) => {
 
+
+
     let obj = {
         method: event.contractCall.methodName,
         txHash: event.hash,
@@ -199,6 +204,8 @@ const createFilteredTransaction = async (event) => {
         gasPrice: parseInt(event.gasPrice),
         etherValue: parseInt(event.value) / 1e18,
         amountOutMin: event.contractCall.params.amountOutMin,
+        amountIn :event.contractCall.params.amountIn,
+        amountInMax : event.contractCall.params.amountInMax,
         tokenOut: event.contractCall.params.path[event.contractCall.params.path.length - 1],
         deadline: parseInt(event.contractCall.params.deadline)
     }
@@ -206,11 +213,21 @@ const createFilteredTransaction = async (event) => {
     let ret = await precise(obj.tokenOut, obj.amountOutMin)
     obj.decimals = ret.decimals;
     obj.holdersCount = ret.holdersCount;
+    
+        obj.amountOutMin = Number.parseFloat(obj.amountOutMin) / Math.pow(10, obj.decimals)
+        if (holdersCount < 200) {
+            return undefined
+        }
+    
+    console.log(obj.method)
 
-    obj.amountOutMin = Number.parseFloat(obj.amountOutMin) / Math.pow(10, obj.decimals)
-    if (holdersCount < 200) {
-        return undefined
-    }
+    if(obj.contractCall === 'swapTokensForExactTokens' || obj.contractCall === 'swapExactTokensForTokens'){
+         obj = await convertToEth(obj)
+         console.log(obj)
+    } 
+
+
+
 
     console.log('')
     console.log(event.hash)

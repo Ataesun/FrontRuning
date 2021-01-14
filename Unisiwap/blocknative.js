@@ -7,7 +7,7 @@ const uniswap = require('./uniswap')
 
 
 const options = {
-    dappId: process.env.DAPPID6S,
+    dappId: process.env.DAPPID2,
     networkId: 1,
     transactionHandlers: [],
     ws: WebSocket
