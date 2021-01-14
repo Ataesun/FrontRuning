@@ -1,13 +1,21 @@
 
-const maximise = async(eth,pairToken,threshHold) =>{
+const maximise = async(eth,pairToken,slippage) =>{
 
-    let newPrice = Number.parseFloat(threshHold*eth.price);  
+    let newPrice = Number.parseFloat(slippage*eth.price);  
     let lhs = Number.parseFloat((newPrice*(pairToken.reserve)-eth.reserve))
     let rhs = Number.parseFloat(1+(newPrice*pairToken.price))
-    let x = lhs/rhs
 
-    if(x>1.5){
-        return 1.5;
+    let x = lhs/rhs
+    console.log('required x')
+    console.log(x)
+    
+    if (eth.reserve < 10 ) {
+        console.log ("eth reserve lower than 10")
+        return undefined
+    }
+    
+    if(x>2.4){
+        return 2.4;
     }
     return x 
 }
