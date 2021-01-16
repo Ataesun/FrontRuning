@@ -1,7 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb://localhost:27017/";
 const axios = require("axios")
-const client = new MongoClient(url)
+const client = new MongoClient(url,{useUnifiedTopology: true})
 
 const getData = async (pairID) => {
 
@@ -86,9 +86,8 @@ const dbRetrieve = async () => {
 }
 
 // const test = async () => {
-//   let data = await dbRetrieve();
-//   console.log(data)
-//   process.exit()
+//   dbClear();
+//   dbInit();
 // }
 
 // test()

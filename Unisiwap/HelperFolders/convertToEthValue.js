@@ -1,31 +1,38 @@
 const { Fetcher, Route, Token } = require('@uniswap/sdk');
 const { ChainID, Weth, } = require('./uniswapConstants')
 
-const amountMinCalc = (obj) => {
-    if(obj.amountIn === undefined){
-        obj.amountIn = 0;
+const amountMinCalc = (event, decimals) => {
+    event = event.contractCall.params
+    if(event.amountIn === undefined){
+        event.amountIn = 0;
     } else{
-        obj.amountInMax = 0;
+        event.amountInMax = 0;
     }
 
-    return obj.amountInMax + obj.amountIn;
+    console.log((event.amountInMax + event.amountIn)/Math.pow(10,decimals))
+
+    return (event.amountInMax + event.amountIn)/Math.pow(10,decimals);
 }
 
 
-const convertToEth = async (obj) => {
+const convertToEth = async (event,tokenAdress, decimals) => {
 
-    console.log(obj)
+    let amountIn = amountMinCalc(event, decimals)
 
-    obj.amountIn = amountMinCalc(obj)
-    let token = new Token(ChainID, obj.tokenOut, obj.decimals)
+    console.log( {amountIn})
+    let token = new Token(ChainID, tokenAdress, decimals)
     let pair = await Fetcher.fetchPairData(token, Weth);
     let route = new Route([pair], Weth);
 
     let priceTokenIn = route.midPrice.invert().toSignificant(6);
 
-    obj.value = priceTokenIn * obj.amountIn
-        console.log(obj.value);
-    return obj
+    console.log(pair.liquidityToken.address.toLowerCase())
+
+    console.log({priceTokenIn,amountIn})
+
+    let value = priceTokenIn * amountIn
+    console.log({value})
+    return value
 
 }
 

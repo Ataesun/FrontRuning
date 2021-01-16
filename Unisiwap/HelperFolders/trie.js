@@ -1,8 +1,9 @@
 const trie = require('trie-prefix-tree');
 const dbRetrieve = require('../database/database')
 
-var myTrie = trie([]);
-const getTrie = async (myTrie) => {
+
+const getTrie = async () => {
+    let myTrie = trie([])
     //Retrieve data from database; 
     let data = await dbRetrieve()
     data.forEach(element => {
@@ -12,4 +13,10 @@ const getTrie = async (myTrie) => {
     return myTrie
 }
 
-console.log(getTrie(myTrie))
+
+const trieInit = async () =>{
+    const myTrie = await getTrie()
+    return myTrie
+}
+
+module.exports = trieInit

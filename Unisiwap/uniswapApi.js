@@ -1,5 +1,9 @@
 const axios = require("axios")
 
+const initPair = async ()=>{
+  
+}
+
 const getData = async (pairID)=> {
   let response = await axios({
     url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',

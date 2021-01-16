@@ -1,6 +1,9 @@
 const { ChainID, BuyTolerance, SellTolerance, Ethers, Weth, Buy, Sell } = require('./HelperFolders/uniswapConstants')
 
-const { Fetcher, Trade, TokenAmount, Route, Token, TradeType } = require('@uniswap/sdk');
+
+const { Fetcher, Trade, TokenAmount, Route, Token, TradeType, Pair, Price } = require('@uniswap/sdk');
+
+
 
 const getInputOutput = (trade, tolerance) => {
     let amountOutMin = trade.minimumAmountOut(tolerance).raw;
@@ -37,8 +40,17 @@ const getApprove = () => {
 
 
 const getData = async (filteredTransaction) => {
+
     let token = new Token(ChainID, filteredTransaction.tokenOut, filteredTransaction.decimals)
-    pair = await Fetcher.fetchPairData(token, Weth);
+    let buyAmount = Math.round(filteredTransaction.amountOutMin*1e5*1.02)
+    
+    let ethAmount = Math.round(filteredTransaction.etherValue*1e5)
+
+    let buyTA = new TokenAmount(token, BigInt(buyAmount));
+    let ethTA = new TokenAmount(Weth, BigInt(ethAmount))
+    let pair = new Pair ( ethTA,buyTA)
+
+
     return {
         token,
         pair,
@@ -136,11 +148,13 @@ module.exports = {
 
 const test = async () => {
 
-    // let glitch = await Fetcher.fetchTokenData(ChainID, '0x09fd164ce0c587b433ab4a7753d4e6e8ed9e8f5f');
-    let dai = await Fetcher.fetchTokenData(ChainID, '0x6b175474e89094c44da98b954eedeac495271d0f')
-    let pair = await Fetcher.fetchPairData(dai, Weth);
 
-    let trade = getTrade(pair, Weth, 1e15)
+
+    // let glitch = await Fetcher.fetchTokenData(ChainID, '0x09fd164ce0c587b433ab4a7753d4e6e8ed9e8f5f');
+    // let dai = await Fetcher.fetchTokenData(ChainID, '0x6b175474e89094c44da98b954eedeac495271d0f')
+    // let pair = await Fetcher.fetchPairData(dai, Weth);
+
+    // let trade = getTrade(pair, Weth, 1e15)
     // console.log(trade);
 
     // let amountOutMin = trade.minimumAmountOut(BuyTolerance).raw;
@@ -170,3 +184,5 @@ const test = async () => {
 //     process.exit("Transaction FInished")
 // }
 }
+
+// test()
