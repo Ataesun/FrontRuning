@@ -1,5 +1,5 @@
 const trie = require('trie-prefix-tree');
-const dbRetrieve = require('../database/database')
+const dbRetrieve = require('../database/tokenAdress')
 
 
 const getTrie = async () => {

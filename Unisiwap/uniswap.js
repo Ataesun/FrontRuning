@@ -3,7 +3,7 @@ const { ChainID, BuyTolerance, SellTolerance, Ethers, Weth, Buy, Sell } = requir
 
 const { Fetcher, Trade, TokenAmount, Route, Token, TradeType, Pair, Price } = require('@uniswap/sdk');
 
-
+const EtherscanUrl ='https://etherscan.io/tx/'
 
 const getInputOutput = (trade, tolerance) => {
     let amountOutMin = trade.minimumAmountOut(tolerance).raw;
@@ -111,7 +111,11 @@ const buyTokens = async (buyObj) => {
             gasLimit: Ethers.BigNumber.from(500000).toHexString()
         });
     await tx.wait()
-    console.log(`Approve token for selling! \n`)
+    console.log(`Transaction has Finished\n`)
+
+    console.log(`
+    
+    `)
     return tx
 }
 

@@ -22,7 +22,6 @@ const getData = async (pairID) => {
     }){
       token{
         name
-        symbol
         id
       }
       dailyVolumeUSD
