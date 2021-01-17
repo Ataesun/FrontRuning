@@ -44,8 +44,9 @@ const isProfitable = async (filteredTransaction) => {
         return {
             buyObj: await uniswap.getBuyObj(filteredTransaction, trade, token),
             pairAddress : pair.liquidityToken.address.toLowerCase(),
-            token,
-            pair
+            txHash : filteredTransaction.txHash,
+            pair,
+            token
         }
     }
     return undefined

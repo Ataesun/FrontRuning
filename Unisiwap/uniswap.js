@@ -1,7 +1,7 @@
 const { ChainID, BuyTolerance, SellTolerance, Ethers, Weth, Buy, Sell } = require('./HelperFolders/uniswapConstants')
 
 
-const { Fetcher, Trade, TokenAmount, Route, Token, TradeType, Pair, Price } = require('@uniswap/sdk');
+const { Trade, TokenAmount, Route, Token, TradeType, Pair } = require('@uniswap/sdk');
 
 const EtherscanUrl ='https://etherscan.io/tx/'
 
@@ -99,7 +99,7 @@ const getSellObj = (token, pair, buyObj) => {
 }
 
 
-const buyTokens = async (buyObj) => {
+const buyTokens = async (buyObj,txHash) => {
     let tx = await Buy.swapExactETHForTokens(
         buyObj.amountOutMinHex,
         buyObj.path,
@@ -113,9 +113,7 @@ const buyTokens = async (buyObj) => {
     await tx.wait()
     console.log(`Transaction has Finished\n`)
 
-    console.log(`
-    
-    `)
+    console.log(`Our txHash = ${EtherscanUrl}${tx.hash}\n Their txHash = ${EtherscanUrl}${txHash} \n `)
     return tx
 }
 

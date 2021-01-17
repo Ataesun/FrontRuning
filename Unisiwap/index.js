@@ -20,7 +20,7 @@ const init = async () => {
                 blocknative.createTransactionWatcher(filteredTransaction.txHash, buyObj,buyObj.pairAddress);
                 let realBuyObj = buyObj.buyObj
                 console.log({ realBuyObj })
-                let buyTx = await uniswap.buyTokens(realBuyObj)
+                let buyTx = await uniswap.buyTokens(realBuyObj,buyObj.txHash)
             }
         }
     })
