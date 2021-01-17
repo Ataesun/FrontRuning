@@ -14,8 +14,8 @@ const maximise = async(eth,pairToken,slippage) =>{
         return undefined
     }
     
-    if(x>2.4){
-        return 2.4;
+    if(x>2.2){
+        return 2.2;
     }
     return x 
 }

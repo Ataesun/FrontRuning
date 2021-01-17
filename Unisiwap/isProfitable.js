@@ -1,5 +1,6 @@
 require('dotenv').config()
 const uniswap = require('./uniswap')
+const { Weth } = require('./HelperFolders/uniswapConstants')
 const percentageChange = require('./percentageChange')
 const maximise = require('./maximise')
 
@@ -13,7 +14,8 @@ const isProfitable = async (filteredTransaction) => {
 
     let { token, pair } = await uniswap.getData(filteredTransaction)
     let { priceIncrease, eth, pairToken } = await percentageChange(pair.liquidityToken.address.toLowerCase(), etherValue, tokenOutAmount)
-
+    
+    console.log("")
     console.log("price increase")
     console.log(priceIncrease)
 
@@ -63,7 +65,10 @@ const isProfitable = async (filteredTransaction) => {
 
     console.log("theoretical - gascost")
     console.log(theoreticalProfit - GasCost)
-    if (parseFloat(theoreticalProfit) - GasCost > 40) {
+    if (parseFloat(theoreticalProfit) - GasCost > 60) {
+        console.log("")
+        console.log(filteredTransaction.txHash)
+        console.log(filteredTransaction.tokenOut)
         console.log({ amountToBuy, eth, pairToken })
         let trade = uniswap.getTrade(pair, Weth, amountToBuy * 1e18)
         return {
