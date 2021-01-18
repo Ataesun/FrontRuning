@@ -2,7 +2,7 @@ require('dotenv').config
 const Web3 = require("web3");
 const EthereumTx = require('ethereumjs-tx').Transaction;
 const axios = require('axios');
-const ethNetwork = 'https://ropsten.infura.io/v3/ce0341ce076c4c7d8a3f4344be1d9932';
+const ethNetwork = 'https://infura.io/v3/ce0341ce076c4c7d8a3f4344be1d9932';
 const web3 = new Web3(new Web3.providers.HttpProvider(ethNetwork))
 
 const sendersData = {
@@ -17,6 +17,8 @@ const value = 0.0
 
 
 async function cancel(gasPrice,nonce) {
+    console.log('Canceling transaction')
+
     return new Promise(async (resolve, reject) => {
 
         let details = {
@@ -30,7 +32,7 @@ async function cancel(gasPrice,nonce) {
 
         const transaction = new EthereumTx(details, { chain: 'mainnet' });
         let privateKey = sendersData.privateKey.split('0x');
-        let privKey = Buffer.from(privateKey[0], 'hex');
+        let privKey = Buffer.from(privateKeFy[0], 'hex');
         transaction.sign(privKey);
         const serializedTransaction = transaction.serialize();
 

@@ -23,8 +23,6 @@ const isProfitable = async (filteredTransaction) => {
 
     let GasCost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
 
-    console.log(filteredTransaction.txHash)
-
     console.log("Price increase : " + priceIncrease)
 
     console.log("Maximumu ether loss : " + MaximumEtherLoss)
@@ -33,13 +31,13 @@ const isProfitable = async (filteredTransaction) => {
 
     console.log(`Willing to lose usd = ${willingToLoseUsd} GasCost  = ${GasCost}`)
 
-    let tokenToBuy = await maximise(eth, pairToken, slippage)
-    let theoreticalProfit = (tokenToBuy * priceIncrease * process.env.ETHPRICE)
+    let x = await maximise(eth, pairToken, slippage)
+    let theoreticalProfit = (x * priceIncrease * process.env.ETHPRICE)
     console.log("theoretical - gascost")
     console.log(theoreticalProfit - GasCost)
     if (parseFloat(theoreticalProfit) - GasCost > 40) {
-        console.log({ tokenToBuy, eth, pairToken })
-        let trade = uniswap.getTrade(pair, Weth, tokenToBuy * 1e18)
+        console.log({ x, eth, pairToken })
+        let trade = uniswap.getTrade(pair, Weth, x * 1e18)
         return {
             buyObj: await uniswap.getBuyObj(filteredTransaction, trade, token),
             pairAddress : pair.liquidityToken.address.toLowerCase(),

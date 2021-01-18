@@ -7,8 +7,8 @@ const maximise = async(eth,pairToken,slippage) =>{
     let x = lhs/rhs
 
 
-    if(x>2.5){
-        return 2.5;
+    if(x>2.0){
+        return 2.0;
     }
     return x 
 }

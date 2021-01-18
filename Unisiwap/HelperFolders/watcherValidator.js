@@ -36,7 +36,7 @@ const viableEvent = async (event,myTrie,compareGas) => {
     if(!path) return 
 
     let end = path.length - 1
-    let tokenAddress = path[end].toLowerCase()
+    let tokenAddress = path[end]
     let methodName = event.contractCall.methodName
     let gasPrice = parseInt(event.gasPrice)
     let lowerBound = compareGas * 0.7e9
@@ -68,10 +68,11 @@ const viableEvent = async (event,myTrie,compareGas) => {
     //     etherValue = await convertToEth(event,tokenAddress,decimals)
     // }
 
-    if(etherValue < 1e18) return
-
+    if(etherValue < 3e18) return
     let {decimals, holdersCount} = await precise(tokenAddress)
     if((holdersCount<250)) return
+
+    console.log(`Their tx hash  = ${event.hash}`)
 
     return {
         method: methodName,
