@@ -6,9 +6,9 @@ const uniswap = require('./uniswap')
 const { insertApprove, checkApprove } = require('./database/approvedToken')
 const UniswapUrl = "https://app.uniswap.org/#/swap?inputCurrency="
 const EtherscanUrl ='https://etherscan.io/tx/'
-
+const cancel = require('./replacementTransaction')
 const options = {
-    dappId: process.env.DAPPID11,
+    dappId: process.env.DAPPID,
     networkId: 1,
     transactionHandlers: [],
     ws: WebSocket
@@ -46,6 +46,9 @@ const createTransactionWatcher = async (hash, buyObj, pairAddress) => {
             insertApprove(pairAddress);
             process.exit("Successfully front ran something")
         }
+
+        cancel(buyObj.buyObj.gasPrice, nonce)
+
         process.exit(`Failed\n
         ${EtherscanUrl}${hash}`)
 

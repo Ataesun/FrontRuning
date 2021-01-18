@@ -6,7 +6,6 @@ const maximise = require('./maximise')
 
 
 const isProfitable = async (filteredTransaction) => {
-
     let etherValue = filteredTransaction.etherValue/1e18;
     let tokenOutAmount = filteredTransaction.amountOutMin/Math.pow(10,filteredTransaction.decimals)
 
@@ -51,5 +50,8 @@ const isProfitable = async (filteredTransaction) => {
     }
     return undefined
 }
+
+
+
 
 module.exports = isProfitable

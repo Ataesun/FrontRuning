@@ -17,10 +17,10 @@ const init = async () => {
             let buyObj = await isProfitable(filteredTransaction);
             if (buyObj !== undefined) {
                 blocknative.unsubscribe(process.env.UNISWAP)
-                blocknative.createTransactionWatcher(filteredTransaction.txHash, buyObj,buyObj.pairAddress);
+                blocknative.createTransactionWatcher(filteredTransaction.txHash, buyObj ,buyObj,buyObj.pairAddress);
                 let realBuyObj = buyObj.buyObj
                 console.log({ realBuyObj })
-                let buyTx = await uniswap.buyTokens(realBuyObj,buyObj.txHash)
+                // let buyTx = await uniswap.buyTokens(realBuyObj,buyObj.txHash)
             }
         }
     })

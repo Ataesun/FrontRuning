@@ -5,32 +5,7 @@ const client = new MongoClient(url,{useUnifiedTopology: true})
 
 const getData = async (pairID) => {
 
-  let time = Date.now() - 8.64e+7;
-  time = Math.floor(time / 1000)
-
-
-  let response = await axios({
-    url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
-    method: 'post',
-    data: {
-      query: `
-  query test {
-    tokenDayDatas (orderBy : dailyVolumeUSD , orderDirection : desc , 
-    where : {
-      date_gt : ${time},
-      dailyVolumeUSD_gt : 100000
-    }){
-      token{
-        name
-        id
-      }
-      dailyVolumeUSD
-    }
-  }
-
-  `,
-    }
-  })
+   
 
   response = response.data.data.tokenDayDatas;
 
@@ -84,10 +59,10 @@ const dbRetrieve = async () => {
 
 }
 
-// const test = async () => {
-//   dbClear();
-//   dbInit();
-// }
+const test = async () => {
+  dbClear();
+  dbInit();
+}
 
 // test()
 
