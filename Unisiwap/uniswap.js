@@ -80,14 +80,14 @@ const getBuyObj = async (filteredTransaction, trade, token) => {
 }
 
 const getSellObj = (token, pair, buyObj) => {
-    let trade = getTrade(pair, token, buyObj.amountOutMinHex)
+    let trade = getTrade(pair, token, buyObj.buyObj.amountOutMinHex)
 
     let amountOutMinHex = getInputOutput(trade, SellTolerance)
 
     let path = getPath(token, Weth)
 
     let txObj = {
-        amountIn: buyObj.amountOutMinHex,
+        amountIn: buyObj.buyObj.amountOutMinHex,
         amountOutMinHex: amountOutMinHex,
         path: path,
         deadline: Math.floor(Date.now() / 1000) + 60 * 10,
@@ -100,6 +100,7 @@ const getSellObj = (token, pair, buyObj) => {
 
 
 const buyTokens = async (buyObj,txHash) => {
+    console.log('Buying')
     let tx = await Buy.swapExactETHForTokens(
         buyObj.amountOutMinHex,
         buyObj.path,
@@ -110,11 +111,11 @@ const buyTokens = async (buyObj,txHash) => {
             gasPrice: buyObj.gasPrice,
             gasLimit: Ethers.BigNumber.from(500000).toHexString()
         });
-    await tx.wait()
+    let ret = await tx.wait()
     console.log(`Transaction has Finished\n`)
 
-    console.log(`Our txHash = ${EtherscanUrl}${tx.hash}\n Their txHash = ${EtherscanUrl}${txHash} \n `)
-    return tx
+    console.log(`Our txHash = ${EtherscanUrl}${ret.hash}\n Their txHash = ${EtherscanUrl}${txHash} \n `)
+    return ret
 }
 
 const sellTokens = async (sellObj) => {

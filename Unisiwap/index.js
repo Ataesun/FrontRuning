@@ -1,5 +1,5 @@
 const blocknative = require('./blocknative')
-const { watcher } = require('./watcher')
+const { watcher, txWatcher } = require('./watcher')
 const isProfitable = require('./isProfitable')
 const uniswap = require('./uniswap')
 const emitter = blocknative.createEmitter()
@@ -17,12 +17,11 @@ const init = async () => {
             let buyObj = await isProfitable(filteredTransaction);
             if (buyObj !== undefined) {
                 blocknative.stopWatcher()
-                blocknative.createTransactionWatcher(filteredTransaction.txHash, buyObj, buyObj, buyObj.pairAddress);
-                
+                let txEmitter = await blocknative.createTransactionWatcher(filteredTransaction.txHash);
                 let realBuyObj = buyObj.buyObj
+                txEmitter.on("all", (event) => { txWatcher(event, buyObj, buyObj.pairAddress, realBuyObj.gasPrice) })
                 console.log("Ready to buy")
                 let buyTx = await uniswap.buyTokens(realBuyObj, buyObj.txHash)
-                console.log("Frontrunning!")
             }
         }
     })

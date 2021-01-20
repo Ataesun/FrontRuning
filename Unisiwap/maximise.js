@@ -6,6 +6,7 @@ const maximise = async(eth,pairToken,slippage) =>{
     let rhs = Number.parseFloat(1+(newPrice*pairToken.price))
     let x = lhs/rhs
 
+    // console.log(x*)
 
     if(x>2.0){
         return 2.0;
