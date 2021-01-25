@@ -31,11 +31,11 @@ const isProfitable = async (filteredTransaction) => {
 
     console.log(`Willing to lose usd = ${willingToLoseUsd} GasCost  = ${GasCost}`)
 
-    let x = await maximise(eth, pairToken, slippage)
+    let x = await maximise(eth, pairToken, slippage, priceIncrease)
     let theoreticalProfit = (x * priceIncrease * process.env.ETHPRICE)
     console.log("theoretical - gascost")
     console.log(theoreticalProfit - GasCost)
-    if (parseFloat(theoreticalProfit) - GasCost > 50) {
+    if (parseFloat(theoreticalProfit) - GasCost > 100) {
         console.log({ x, eth, pairToken })
         let trade = uniswap.getTrade(pair, Weth, x * 1e18)
         return {

@@ -24,16 +24,17 @@ const getTrade = (pair, token, amount) => {
     return trade
 }
 
-const getApprove = () => {
+const getApprove = async (address) => {
     const approveFunction = new Ethers.Contract(
-        process.env.UNISWAP,
+        address,
         ['function approve(address _spender, uint256 _value) public returns (bool success)'],
         account
     )
     console.log('Object created')
-    approveFunction.approve(process.env.TO,
+    await approveFunction.approve(process.env.TO,
         {
-            gasPrice: 60e9
+            gasPrice: 122e9, // fix
+            gasLimit: Ethers.BigNumber.from(500000).toHexString()
         })
     console.log('Approved')
 }
@@ -114,7 +115,9 @@ const buyTokens = async (buyObj,txHash) => {
     let ret = await tx.wait()
     console.log(`Transaction has Finished\n`)
 
-    console.log(`Our txHash = ${EtherscanUrl}${ret.hash}\n Their txHash = ${EtherscanUrl}${txHash} \n `)
+    console.log(ret)
+
+    console.log(`Their txHash = ${EtherscanUrl}${txHash} \n `)
     return ret
 }
 

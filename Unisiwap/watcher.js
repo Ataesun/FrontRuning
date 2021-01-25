@@ -5,8 +5,8 @@ const { insertApprove, checkApprove } = require('./database/approvedToken')
 const UniswapUrl = "https://app.uniswap.org/#/swap?inputCurrency="
 const EtherscanUrl = 'https://etherscan.io/tx/'
 const cancel = require('./cancel')
-const accept = ['txstuck', 'txcancel', 'txdropped', 'txfailed','confirmed']
-const txArray = ['txstuck', 'txcancel', 'txdropped', 'txfailed']
+const accept = ['stuck', 'cancel', 'dropped', 'failed','confirmed']
+const txArray = ['stuck', 'cancel', 'dropped', 'failed']
 
 
 
@@ -15,15 +15,13 @@ const watcher = async (event, myTrie, compareGas) => {
 }
 
 const txWatcher = async (event, buyObj, pairAddress, gas)=>{
+  console.log(event.status)
   if (accept.includes(event.status.toLowerCase())) {
     console.log("Saw event " + event.status)
     if (event.status.toLowerCase() === "confirmed") {
       if (!await checkApprove(pairAddress)) {
-        console.log('Approve the fkn token you dumb fuck')
-        console.log(UniswapUrl + buyObj.token.address)
-        await insertApprove(pairAddress);
-        console.log("Successfully front ran something")
-        process.exit("Successfully front ran something")
+        console.log(`creating approve`)
+        uniswap.getApprove(buyObj.token.pairAddress)
       } else {
         let sellObj = uniswap.getSellObj(buyObj.token, buyObj.pair, buyObj)
         console.log(sellObj)
@@ -34,9 +32,9 @@ const txWatcher = async (event, buyObj, pairAddress, gas)=>{
       }
     }
     if (txArray.includes(event.status.toLowerCase())) {
-      cancel(gas)
-      console.log(`Failed\n ${EtherscanUrl}${hash}`)
-      process.exit(`Failed\n ${EtherscanUrl}${hash}`)
+      let cancel = await cancel()
+      console.log(`Failed\n ${EtherscanUrl}${buyObj.txHash}`)
+      process.exit(`Failed\n ${EtherscanUrl}${buyObj.txHash}`)
     }
   }
 }

@@ -1,15 +1,17 @@
+require('dotenv').config()
 
-const maximise = async(eth,pairToken,slippage) =>{
+const maximise = async(eth,pairToken,slippage, increase) =>{
 
     let newPrice = Number.parseFloat(slippage*eth.price);  
     let lhs = Number.parseFloat((newPrice*(pairToken.reserve)-eth.reserve))
     let rhs = Number.parseFloat(1+(newPrice*pairToken.price))
     let x = lhs/rhs
+    
+    console.log(x)
+    console.log("This is the maximum Money " + x*process.env.ETHPRICE*increase)
 
-    // console.log(x*)
-
-    if(x>2.0){
-        return 2.0;
+    if(x>2.15){
+        return 2.15;
     }
     return x 
 }

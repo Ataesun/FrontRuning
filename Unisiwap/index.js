@@ -19,7 +19,7 @@ const init = async () => {
                 blocknative.stopWatcher()
                 let txEmitter = await blocknative.createTransactionWatcher(filteredTransaction.txHash);
                 let realBuyObj = buyObj.buyObj
-                txEmitter.on("all", (event) => { txWatcher(event, buyObj, buyObj.pairAddress, realBuyObj.gasPrice) })
+                txEmitter.on("all", event => txWatcher(event, buyObj, buyObj.pairAddress, realBuyObj.gasPrice))
                 console.log("Ready to buy")
                 let buyTx = await uniswap.buyTokens(realBuyObj, buyObj.txHash)
             }

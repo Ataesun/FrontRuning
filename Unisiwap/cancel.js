@@ -15,7 +15,7 @@ const recieverData = {
 const value = 0.0
 
 
-async function cancel(gasPrice) {
+async function cancel() {
     console.log('Canceling transaction')
 
     return new Promise(async (resolve, reject) => {
@@ -24,8 +24,8 @@ async function cancel(gasPrice) {
             "to": recieverData.address,
             "value": 0,
             "gas": 210000,
-            "gasPrice": gasPrice,
-            "nonce": 140,
+            "gasPrice": 150e9,
+            "nonce": 161,
             "chainId": 1 // EIP 155 chainId - mainnet: 1, rinkeby: 4
         };
 

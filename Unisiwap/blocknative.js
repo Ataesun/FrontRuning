@@ -4,7 +4,7 @@ const BlocknativeSdk = require('bnc-sdk');
 const WebSocket = require('ws');
 
 const options = {
-    dappId: process.env.DAPPID9,
+    dappId: process.env.DAPPID6,
     networkId: 1,
     transactionHandlers: [],
     ws: WebSocket
