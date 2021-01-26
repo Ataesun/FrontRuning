@@ -5,7 +5,7 @@ const client = new MongoClient(url,{useUnifiedTopology: true})
 
 const getData = async (pairID) => {
   let x = new Date()
-  let UTCseconds = Math.floor((x.getTime() + x.getTimezoneOffset()*60*1000)/1000) - 86400
+  let UTCseconds = Math.floor((x.getTime() + x.getTimezoneOffset()*60*1000)/1000)
 
   let response = await axios({
     url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',

@@ -58,7 +58,9 @@ const init = async () => {
         '0x40f0e70a7d565985b967bcdb0ba5801994fc2e80', //zero
         '0x97524f602706cdb64f9dfa71909ace06e98200b6', //badger
         '0x4dd26482738be6c06c31467a19dcda9ad781e8c4',//api3
-        '0x70ec2fa6eccf4010eaf572d1c1a7bcbc72dec983', //rook
+        '0x70ec2fa6eccf4010eaf572d1c1a7bcbc72dec983',
+        '0x7b890092f81b337ed68fba266afc7b4c3710a55b',
+        '0xde68ad8502874a7d5dd1758f7b0a7831f142b78a' //rook
     ]
 
 

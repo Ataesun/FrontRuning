@@ -17,35 +17,31 @@ const value = 0.0
 
 async function cancel() {
     console.log('Canceling transaction')
+    let details = {
+        "to": recieverData.address,
+        "value": 0,
+        "gas": 210000,
+        "gasPrice": 150e9,
+        "nonce": 164,
+        "chainId": 1 // EIP 155 chainId - mainnet: 1, rinkeby: 4
+    };
 
-    return new Promise(async (resolve, reject) => {
+    const transaction = new EthereumTx(details, { chain: 'mainnet' });
+    let privateKey = sendersData.privateKey.split('0x');
+    let privKey = Buffer.from(privateKey[0], 'hex');
+    transaction.sign(privKey);
+    const serializedTransaction = transaction.serialize();
+    console.log(serializedTransaction)
 
-        let details = {
-            "to": recieverData.address,
-            "value": 0,
-            "gas": 210000,
-            "gasPrice": 150e9,
-            "nonce": 161,
-            "chainId": 1 // EIP 155 chainId - mainnet: 1, rinkeby: 4
-        };
+    await web3.eth.sendSignedTransaction('0x' + serializedTransaction.toString('hex'), async (err, id) => {
+        if (err) {
+            console.log(err);
+            return reject();
+        }
 
-        const transaction = new EthereumTx(details, { chain: 'mainnet' });
-        let privateKey = sendersData.privateKey.split('0x');
-        let privKey = Buffer.from(privateKey[0], 'hex');
-        transaction.sign(privKey);
-        const serializedTransaction = transaction.serialize();
-        console.log(serializedTransaction)
-        
-        web3.eth.sendSignedTransaction('0x' + serializedTransaction.toString('hex'), (err, id) => {
-            if (err) {
-                console.log(err);
-                return reject();
-            }
-
-            const url = `https://etherscan.io/tx/${id}`;
-            console.log(url);
-            resolve({ id: id, link: url });
-        });
+        const url = `https://etherscan.io/tx/${id}`;
+        console.log(url);
+        await resolve({ id: id, link: url });
     });
 }
 

@@ -1,7 +1,6 @@
 const { ChainID, BuyTolerance, SellTolerance, Ethers, Weth, Buy, Sell } = require('./HelperFolders/uniswapConstants')
-
-
 const { Trade, TokenAmount, Route, Token, TradeType, Pair } = require('@uniswap/sdk');
+const { insertApprove , checkApprove } = require('./database/approvedToken');
 
 const EtherscanUrl ='https://etherscan.io/tx/'
 
@@ -73,7 +72,7 @@ const getBuyObj = async (filteredTransaction, trade, token) => {
         inputAmountHex: inputAmountHex,
         path: path,
         deadline: Math.floor(Date.now() / 1000) + 60 * 10,
-        gasPrice: filteredTransaction.gasPrice + 40e9
+        gasPrice: filteredTransaction.gasPrice + 30e9
     }
 
     return txObj;
@@ -114,10 +113,9 @@ const buyTokens = async (buyObj,txHash) => {
         });
     let ret = await tx.wait()
     console.log(`Transaction has Finished\n`)
-
-    console.log(ret)
-
     console.log(`Their txHash = ${EtherscanUrl}${txHash} \n `)
+
+
     return ret
 }
 
