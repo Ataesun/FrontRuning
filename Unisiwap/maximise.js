@@ -1,5 +1,5 @@
 require('dotenv').config()
-
+const chalk = require('chalk')
 const maximise = async(eth,pairToken,slippage, increase) =>{
 
     let newPrice = Number.parseFloat(slippage*eth.price);  
@@ -8,7 +8,7 @@ const maximise = async(eth,pairToken,slippage, increase) =>{
     let x = lhs/rhs
     
     console.log(x)
-    console.log("This is the maximum Money " + x*process.env.ETHPRICE*increase)
+    console.log(chalk.blue("This is the maximum Money  : " + x*process.env.ETHPRICE*increase))
 
     if(x>2.11){
         return 2.11;

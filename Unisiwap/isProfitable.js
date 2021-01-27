@@ -1,4 +1,5 @@
 require('dotenv').config()
+const chalk = require('chalk')
 const uniswap = require('./uniswap')
 const { Weth } = require('./HelperFolders/uniswapConstants')
 const percentageChange = require('./uniswapApi')
@@ -12,9 +13,10 @@ const isProfitable = async (filteredTransaction) => {
     let { token, pair } = await uniswap.getData(filteredTransaction)
     let { priceIncrease, eth, pairToken } = await percentageChange(pair.liquidityToken.address.toLowerCase(), etherValue, tokenOutAmount)
 
+    if(priceIncrease <0) return undefined
     let MaximumEtherLoss = etherValue - (eth.price * tokenOutAmount)
     if (MaximumEtherLoss < 0) {
-        console.log('undefined slippage')
+        console.log(chalk.red('undefined slippage'))
         return undefined
     }
     let slippage = 1 + ((MaximumEtherLoss / etherValue) * 0.7);
@@ -23,20 +25,19 @@ const isProfitable = async (filteredTransaction) => {
 
     let GasCost = ((filteredTransaction.gasPrice + 40e9) / 25e8)
 
-    console.log("Price increase : " + priceIncrease)
+    console.log(chalk.blue("Price increase : " + priceIncrease))
 
-    console.log("Maximumu ether loss : " + MaximumEtherLoss)
+    console.log(chalk.blue("Maximumu ether loss : " + MaximumEtherLoss))
 
-    console.log("Etherum value :" + etherValue)
+    console.log(chalk.blue("Etherum value :" + etherValue))
 
-    console.log(`Willing to lose usd = ${willingToLoseUsd} GasCost  = ${GasCost}`)
+    console.log(chalk.blue(`Willing to lose usd : ${willingToLoseUsd} GasCost  = ${GasCost}`))
 
     let x = await maximise(eth, pairToken, slippage, priceIncrease)
-    let theoreticalProfit = (x * priceIncrease * process.env.ETHPRICE)
-    console.log("theoretical - gascost")
-    console.log(theoreticalProfit - GasCost)
+    let theoreticalProfit = x * priceIncrease * process.env.ETHPRICE
+    console.log(chalk.blue("theoretical - gascost : " + theoreticalProfit - GasCost))
     if (parseFloat(theoreticalProfit) - GasCost > 70) {
-        console.log({ x, eth, pairToken })
+        console.log(chalk.green('found profitable transaction, passing back buyObj'))
         let trade = uniswap.getTrade(pair, Weth, x * 1e18)
         return {
             buyObj: await uniswap.getBuyObj(filteredTransaction, trade, token),
