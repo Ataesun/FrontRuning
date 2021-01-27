@@ -35,7 +35,7 @@ const isProfitable = async (filteredTransaction) => {
 
     let x = await maximise(eth, pairToken, slippage, priceIncrease)
     let theoreticalProfit = x * priceIncrease * process.env.ETHPRICE
-    console.log(chalk.blue("theoretical - gascost : " + theoreticalProfit - GasCost))
+    console.log(chalk.magenta.bold("theoretical - gascost : " + (theoreticalProfit - GasCost)))
     if (parseFloat(theoreticalProfit) - GasCost > 70) {
         console.log(chalk.green('found profitable transaction, passing back buyObj'))
         let trade = uniswap.getTrade(pair, Weth, x * 1e18)

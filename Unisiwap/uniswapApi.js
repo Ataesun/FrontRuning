@@ -31,8 +31,8 @@ const getData = async (pairID)=> {
 
 
   response = response.data.data.pair;
-  if(response.token0.name !== 'Wrapped Ether' && response.token1.name !== 'Wrapped Ether') return undefined
   if(response.token0.name === undefined) return undefined 
+  if(response.token0.name !== 'Wrapped Ether' && response.token1.name !== 'Wrapped Ether') return undefined
   if(response.token0.name !== 'Wrapped Ether'){
     return {
       eth : {

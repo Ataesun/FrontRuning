@@ -39,8 +39,8 @@ const viableEvent = async (event,myTrie,compareGas) => {
     let tokenAddress = path[end]
     let methodName = event.contractCall.methodName
     let gasPrice = parseInt(event.gasPrice)
-    let lowerBound = compareGas * 0.8e9
-    let upperBound = compareGas * 1.2e9
+    let lowerBound = compareGas * 0.85e9
+    let upperBound = compareGas * 1.25e9
     let etherValue = event.value
     let amountOutMin = event.contractCall.params.amountOutMin
 
@@ -58,21 +58,20 @@ const viableEvent = async (event,myTrie,compareGas) => {
     if(methodArray.indexOf(methodName) === -1 ) return 
 
     
+    
     if(!myTrie.hasWord(tokenAddress)) return
     // viable address
-
 
     // let {decimals} = await precise(path[0].toLowerCase())
     // amountOutMin = amountOutMin / Math.pow(decimals,10)
     // if(etherValue === '0' && !stable.includes(tokenOut)) {
     //     etherValue = await convertToEth(event,tokenAddress,decimals)
     // }
-
     if(etherValue < 3e18) return
     let {decimals, holdersCount} = await precise(tokenAddress)
     if((holdersCount<250)) return
 
-    console.log(`Their tx hash  = ${event.hash}`)
+    console.log(`Their tx hash  = https://etherscan.io/tx/${event.hash}`)
 
     return {
         method: methodName,

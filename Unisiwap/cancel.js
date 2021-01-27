@@ -22,7 +22,7 @@ async function cancel() {
         "value": 0,
         "gas": 210000,
         "gasPrice": 150e9,
-        "nonce": 164,
+        "nonce": 169,
         "chainId": 1 // EIP 155 chainId - mainnet: 1, rinkeby: 4
     };
 
@@ -31,7 +31,6 @@ async function cancel() {
     let privKey = Buffer.from(privateKey[0], 'hex');
     transaction.sign(privKey);
     const serializedTransaction = transaction.serialize();
-    console.log(serializedTransaction)
 
     await web3.eth.sendSignedTransaction('0x' + serializedTransaction.toString('hex'), async (err, id) => {
         if (err) {

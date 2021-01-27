@@ -6,7 +6,7 @@ const uniswap = require('./uniswap')
 const emitter = blocknative.createEmitter()
 const trieInit = require('./HelperFolders/trie')
 const { getGas } = require('./HelperFolders/watcherValidator')
-const { insertApprove } = require('./database/approvedToken')
+const { checkApprove, insertApprove } = require('./database/approvedToken')
 
 const init = async () => {
     let myTrie = await trieInit();

@@ -7,8 +7,8 @@ const maximise = async(eth,pairToken,slippage, increase) =>{
     let rhs = Number.parseFloat(1+(newPrice*pairToken.price))
     let x = lhs/rhs
     
-    console.log(x)
-    console.log(chalk.blue("This is the maximum Money  : " + x*process.env.ETHPRICE*increase))
+    console.log(chalk.yellow("old X is " + x))
+    console.log(chalk.magenta.bold("This is the maximum Money  : " + x*process.env.ETHPRICE*increase))
 
     if(x>2.11){
         return 2.11;
