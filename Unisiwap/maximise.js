@@ -10,8 +10,8 @@ const maximise = async(eth,pairToken,slippage, increase) =>{
     console.log(chalk.yellow("old X is " + x))
     console.log(chalk.magenta.bold("This is the maximum Money  : " + x*process.env.ETHPRICE*increase))
 
-    if(x>2.11){
-        return 2.11;
+    if(x>2){
+        return 2;
     }
     return x 
 }

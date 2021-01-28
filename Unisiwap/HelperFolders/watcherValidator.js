@@ -39,8 +39,8 @@ const viableEvent = async (event,myTrie,compareGas) => {
     let tokenAddress = path[end]
     let methodName = event.contractCall.methodName
     let gasPrice = parseInt(event.gasPrice)
-    let lowerBound = compareGas * 0.85e9
-    let upperBound = compareGas * 1.25e9
+    let lowerBound = compareGas * 0.87e9
+    let upperBound = compareGas * 1.27e9
     let etherValue = event.value
     let amountOutMin = event.contractCall.params.amountOutMin
 

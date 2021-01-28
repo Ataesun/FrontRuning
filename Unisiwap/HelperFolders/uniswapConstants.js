@@ -7,7 +7,7 @@ const Provider = Ethers.getDefaultProvider('mainnet', {
     infra: process.env.INFURA
 })
 
-const BuyTolerance = new Percent('50', '100000');
+const BuyTolerance = new Percent('100', '100000');
 
 const SellTolerance = new Percent('100', '100000');
 

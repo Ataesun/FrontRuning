@@ -88,7 +88,7 @@ const getSellObj = (token, pair, buyObj) => {
 
     let txObj = {
         amountIn: buyObj.buyObj.amountOutMinHex,
-        amountOutMinHex: amountOutMinHex,
+        amountOutMinHex: amountOutMinHex.amountOutMinHex,
         path: path,
         deadline: Math.floor(Date.now() / 1000) + 60 * 10,
         gasPrice: buyObj.gasPrice + 10e9
