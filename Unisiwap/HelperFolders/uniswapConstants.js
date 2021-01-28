@@ -1,4 +1,9 @@
 require('dotenv').config()
+
+
+
+// Initialised all the constant variables I work with from the uniswap SDK
+
 const { ChainId, WETH, Percent } = require('@uniswap/sdk');
 const ChainID = ChainId.MAINNET;
 const Ethers = require('ethers');
@@ -38,4 +43,4 @@ module.exports = {
     Weth,
     Buy,
     Sell
-  }
+}

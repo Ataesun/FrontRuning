@@ -1,9 +1,12 @@
 const { ChainID, BuyTolerance, SellTolerance, Ethers, Weth, Buy, Sell } = require('./HelperFolders/uniswapConstants')
 const { Trade, TokenAmount, Route, Token, TradeType, Pair } = require('@uniswap/sdk');
-const { insertApprove , checkApprove } = require('./database/approvedToken');
-
 const EtherscanUrl ='https://etherscan.io/tx/'
 
+/* This file consists of the default constants from the uniswap SDKs that have been modified to suit my needs */
+
+
+
+// basically initialises the my input eth and the minimum output tokens I am willing to accept
 const getInputOutput = (trade, tolerance) => {
     let amountOutMin = trade.minimumAmountOut(tolerance).raw;
     let amountOutMinHex = Ethers.BigNumber.from(amountOutMin.toString()).toHexString();
@@ -16,6 +19,7 @@ const getInputOutput = (trade, tolerance) => {
     }
 }
 
+// returns trade object
 const getTrade = (pair, token, amount) => {
 
     let route = new Route([pair], token);
@@ -23,6 +27,7 @@ const getTrade = (pair, token, amount) => {
     return trade
 }
 
+// uses ethers.contract to call a solidity code that allows me to approve a token for selling 
 const getApprove = async (address) => {
     const approveFunction = new Ethers.Contract(
         address,
@@ -38,7 +43,7 @@ const getApprove = async (address) => {
     console.log('Approved')
 }
 
-
+// get token and pair data from filtered transaction
 const getData = async (filteredTransaction) => {
 
     let token = new Token(ChainID, filteredTransaction.tokenOut, filteredTransaction.decimals)
@@ -57,10 +62,12 @@ const getData = async (filteredTransaction) => {
     }
 }
 
+// sets the trade path
 const getPath = (tokenFrom, tokenTo) => {
     return [tokenFrom.address, tokenTo.address]
 }
 
+// creates the final buy object
 const getBuyObj = async (filteredTransaction, trade, token) => {
 
     let { inputAmountHex, amountOutMinHex } = getInputOutput(trade, BuyTolerance)
@@ -79,6 +86,7 @@ const getBuyObj = async (filteredTransaction, trade, token) => {
 
 }
 
+// creates the sell object using the buy object
 const getSellObj = (token, pair, buyObj) => {
     let trade = getTrade(pair, token, buyObj.buyObj.amountOutMinHex)
 
@@ -98,7 +106,7 @@ const getSellObj = (token, pair, buyObj) => {
 
 }
 
-
+// uses the buyObj to initialise the purchase of token using the uniswap SDk
 const buyTokens = async (buyObj,txHash) => {
     console.log('Buying')
     let tx = await Buy.swapExactETHForTokens(
@@ -119,6 +127,7 @@ const buyTokens = async (buyObj,txHash) => {
     return ret
 }
 
+// uses the sellObj to initialise the sale of  the bought token using the uniswap SDk
 const sellTokens = async (sellObj) => {
     let tx = await Sell.swapExactTokensForETH(
         sellObj.amountIn,

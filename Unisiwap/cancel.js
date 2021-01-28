@@ -5,6 +5,11 @@ const axios = require('axios');
 const ethNetwork = process.env.INFURA;
 const web3 = new Web3(new Web3.providers.HttpProvider(ethNetwork))
 
+
+/* This code is pretty much copied and reformated for my needs. It is largely unchanged
+    when something goes wrong this function is called and it cancels my transaction 
+*/
+
 const sendersData = {
     address: process.env.TO,
     privateKey: process.env.WALLET
@@ -13,6 +18,8 @@ const recieverData = {
     address: '0x7d00DA0B76792128cC07bB987Ce53Cc59313F99f'
 }
 const value = 0.0
+
+
 
 
 async function cancel() {

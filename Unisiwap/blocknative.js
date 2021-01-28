@@ -1,5 +1,8 @@
 require('dotenv').config()
-// Create the block native object
+
+
+//Initialises all the blockNative constants that I work with in this project
+
 const BlocknativeSdk = require('bnc-sdk');
 const WebSocket = require('ws');
 
@@ -12,6 +15,8 @@ const options = {
 
 const blocknative = new BlocknativeSdk(options)
 
+
+// creates emitter for uniswap
 const createEmitter = () => {
     const {
         emitter,
@@ -22,6 +27,7 @@ const createEmitter = () => {
 }
 
 
+// creates emitter for the account that I am frontrunning 
 const createTransactionWatcher = async (hash) => {
 
     const {
@@ -32,7 +38,7 @@ const createTransactionWatcher = async (hash) => {
     return emitter
 }
 
-
+// stops emmit 
 const stopWatcher = () => {
     blocknative.unsubscribe(process.env.UNISWAP)
 }

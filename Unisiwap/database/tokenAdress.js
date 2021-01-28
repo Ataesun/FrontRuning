@@ -3,6 +3,9 @@ const url = "mongodb://localhost:27017/";
 const axios = require("axios")
 const client = new MongoClient(url,{useUnifiedTopology: true})
 
+
+// Sends a query to the uniswap api to get the most traded tokens of each day that has a daily trade volume of above 50000
+
 const getData = async (pairID) => {
   let x = new Date()
   let UTCseconds = Math.floor((x.getTime() + x.getTimezoneOffset()*60*1000)/1000)
@@ -41,6 +44,8 @@ const getData = async (pairID) => {
 
 }
 
+// initailise a the database using getData
+
 const dbInit = async () => {
   let data = await getData()
   MongoClient.connect(url, function (err, db) {
@@ -53,6 +58,8 @@ const dbInit = async () => {
     });
   });
 }
+
+// Clears the colection
 
 const dbClear = async () => {
   MongoClient.connect(url, function (err, db) {
@@ -67,6 +74,8 @@ const dbClear = async () => {
   });
 }
 
+//Retrieves and returns all elements of the collection as an array
+
 const dbRetrieve = async () => {
   try {
     await client.connect();
@@ -80,6 +89,7 @@ const dbRetrieve = async () => {
 
 }
 
+// Sometimes ran to resert the databases
 const test = async () => {
   dbClear();
   dbInit();

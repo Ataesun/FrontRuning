@@ -1,5 +1,9 @@
 require('dotenv').config()
 const chalk = require('chalk')
+
+
+// Thsi function cauclates an X value given the current amount of tokens in the specific pair liquidity pool
+// x is hardcoded to cap out at 2 because of testing and dont want to loose a billion dollars 
 const maximise = async(eth,pairToken,slippage, increase) =>{
 
     let newPrice = Number.parseFloat(slippage*eth.price);  

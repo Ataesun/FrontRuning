@@ -1,9 +1,6 @@
 const axios = require("axios")
 
-const initPair = async ()=>{
-  
-}
-
+// Get the token pair data from the uniswap GraphQL api
 const getData = async (pairID)=> {
   let response = await axios({
     url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
@@ -62,6 +59,7 @@ const getData = async (pairID)=> {
   }
 }
 
+// calcuates how the seen transaction will affect the trade price
 const percentageChange = async (pair, etherAmount, tokenAmount) => {
 let { eth, pairToken} = await getData(pair.toLowerCase());
 let priceIncrease = ((parseFloat(eth.reserve)+etherAmount)/(parseFloat(pairToken.reserve)-tokenAmount)/(parseFloat(eth.reserve)/parseFloat(pairToken.reserve))-1)*0.7

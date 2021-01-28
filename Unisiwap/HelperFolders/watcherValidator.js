@@ -1,13 +1,11 @@
 
 const axios = require('axios').default;
-const convertToEth = require('./convertToEthValue')
-// const getTrie = require('./TriStructure');
-// // const myTrie = getTrie();
 const methodArray = ['swapExactETHForTokens','swapETHForExactTokens','swapTokensForExactTokens','swapExactTokensForTokens']
 const stable = ['0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48','0xdac17f958d2ee523a2206206994597c13d831ec7',
 '0x6b175474e89094c44da98b954eedeac495271d0f','0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
 ]
 
+// Gets the significant figures of the token value, some tokens are in 6 significant figures while others at 18
 const precise = async (token) => {
     let sig = await axios.get(`https://api.ethplorer.io/getTokenInfo/${token}?apiKey=${process.env.TOKENKEY}`);
     decimals = sig.data.decimals
@@ -18,7 +16,7 @@ const precise = async (token) => {
         holdersCount
     };
 }
-
+// gets the currently traded gas price
 const getGas = async () => {
     let compareGas = await axios.get(process.env.GASAPI)
     compareGas = compareGas.data
@@ -29,7 +27,7 @@ const getGas = async () => {
 
 
 
-
+// Filters out all emits and converts valuable emiits to filterTransactions that are turned back to index
 const viableEvent = async (event,myTrie,compareGas) => {
 
     let path = event.contractCall.params.path

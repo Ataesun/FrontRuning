@@ -8,12 +8,16 @@ const accept = ['stuck', 'cancel', 'dropped', 'failed', 'confirmed']
 const txArray = ['stuck', 'cancel', 'dropped', 'failed']
 
 
-
+// gets filtered transaction
 const watcher = async (event, myTrie, compareGas) => {
   return await viableEvent(event, myTrie, compareGas)
 }
 
-const txWatcher = async (event, buyObj, gas) => {
+/* gets emmits from the transaction watcher emitter 
+   if the their transaction fails it cancels my own transaction
+   and if it succededs it commences selling
+*/
+const txWatcher = async (event, buyObj) => {
   console.log(event.status)
   if (accept.includes(event.status.toLowerCase())) {
     if (event.status.toLowerCase() === "confirmed") {
