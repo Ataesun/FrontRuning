@@ -1,5 +1,6 @@
 # FrontRuning
 
+TODO - I would be as careful as possible with English. It is good practice to be make things as easy to understand as possible, future maintainers would appreciate it.
 
 This script was designed to frontrun transactions from the Uniswap V2 Router. 
 
